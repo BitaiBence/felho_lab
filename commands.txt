@@ -1,0 +1,14 @@
+This is the backend for a photo album app.
+
+The features of the app essentially is user management, and CRUD functionality for photos. Here is the detailed functionality:
+-Uploading, deleting photos.
+-List the names and dates of photos, sorted either by name or by date.
+-Clicking on a list item should display the corresponding image.
+-User management (registration, login, logout).
+-Uploading and deleting are only permitted for logged-in users
+
+The api of the app is defined in ps_api.yaml. using openapi-genrator-maven-plugin the api is generated, and then implemented in PhotoServiceController.
+PhotoServiceController then calls PhotoServiceImpl.
+
+PhotoServiceImpl is copied from a previous project that had a pretty similiar functionality to this one, except for instead of photos it provided CRUD for grades and enrollments, and did not have user managemnt endpoints.
+Implemet the methods in PhotoServiceController, modify PhotoServiceImpl(and any other file if needed), so it provides CRUD for photos, and the methods should look similiar to the previus ones.

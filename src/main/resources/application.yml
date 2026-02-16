@@ -1,0 +1,88 @@
+server:
+  port: 3000
+spring:
+  application:
+    name: ps
+  datasource:
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    url: jdbc:sqlserver://sqlserver:1433;databaseName=photo;loginTimeout=30;encrypt=true;trustServerCertificate=true
+    username: ps
+    password: ps
+    hikari:
+      minimum-idle: 10
+      maximum-pool-size: 10
+      login-timeout: 30000
+      idle-timeout: 600000
+      auto-commit: true
+      pool-name: HikariCorePool
+      max-lifetime: 1800000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+  jpa:
+    showSql: true
+    properties: # konfigurációs lehetőségek: org.eclipse.persistence.config.PersistenceUnitProperties
+      eclipselink:
+        target-database: org.eclipse.persistence.platform.database.SQLServerPlatform
+        weaving: static
+        cache.shared.default: false
+        session:
+          customizer: hu.avhga.g3.lib.persistence.configuration.EnableIntegrityChecker
+        logging:
+          logger: hu.avhga.g3.lib.logger.persistence.Slf4JSessionLogger
+          level: INFO
+          parameters: true
+        jpa:
+          uppercase-column-names: false
+        ddl-generation: none
+  security.oauth2.client:
+    provider:
+      keycloak-impersonate:
+        token-uri: http://keycloak:8080/realms/internal/protocol/openid-connect/token
+      keycloak-clients:
+        token-uri: http://keycloak:8080/realms/clients/protocol/openid-connect/token
+    registration:
+      ffk-clients:
+        provider: keycloak-clients
+        client-id: felhasznaloi-fiok-kezelo
+        client-secret: csinalj_egy_sajat_profilt_es_abban_ird_felul_a_sajat_secreteddel
+        authorization-grant-type: client_credentials
+      ffk-impersonate:
+        provider: keycloak-impersonate
+        client-id: felhasznaloi-fiok-kezelo
+        client-secret: 5Bvrwuoz3wwhwDGQC0mGJnVFtyZHLlbO
+        authorization-grant-type: client_credentials
+
+springdoc:
+  api-docs:
+    path: /api-docs
+    groups:
+      enabled: true
+    version: OPENAPI_3_0
+  writer-with-default-pretty-printer: true
+
+oidc:
+  header:
+    use-client-token-header: true
+    clientRegistrationId: ffk-clients
+  swagger-ui:
+    authorization-url: http://keycloak:8080/realms/g3/protocol/openid-connect/auth
+    access-token-url: http://keycloak:8080/realms/g3/protocol/openid-connect/token
+
+logging:
+  level:
+    hu.avhga.g3: trace
+    org.springframework: info
+    org.eclipse.persistence: debug
+    org.springframework.web.client: debug
+    org.springframework.web.filter.CommonsRequestLoggingFilter: debug
+    org.springframework.cache: info
+    org.springframework.security.web.FilterChainProxy: info
+    bbitai.student: DEBUG                 # your generated package
+    org.glassfish.jersey.client: DEBUG    # Jersey client
+    org.apache.hc.client5.http: DEBUG     # Apache HttpClient 5
+    org.apache.hc.client5.http.wire: DEBUG
+  file:
+    name: target/log.log
+
+local:
+  cors-config: true

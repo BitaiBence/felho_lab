@@ -1,0 +1,85 @@
+openapi: "3.0.1"
+info:
+  version: 1.0.0
+  title: Alap
+  description: Általánosan használt openapi részletek
+paths: { }
+components:
+  parameters:
+    id:
+      name: id
+      in: path
+      description: Objektum azonosítója
+      required: true
+      schema:
+        type: integer
+        format: int64
+    pageAndSortQuery:
+      name: queryParams
+      in: query
+      description: Query paraméterek
+      required: false
+      schema:
+        $ref: '#/components/schemas/PageAndSortSearchDto'
+  schemas:
+    ErrorResponse:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          example: 'G3-ERROR-001'
+        message:
+          type: string
+          example: 'Validation failed'
+    SimpleMessageResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 'Message text'
+    PageAndSortSearchDto:
+      properties:
+        pagination:
+          $ref: '#/components/schemas/PaginationRequestDto'
+        sort:
+          $ref: '#/components/schemas/SortRequest'
+    PaginationResponseDto:
+      type: object
+      properties:
+        total:
+          type: integer
+          format: int64
+    PaginationRequestDto:
+      type: object
+      properties:
+        offset:
+          type: integer
+          minimum: 0
+          default: 0
+        limit:
+          type: integer
+          minimum: 0
+          default: 100
+    NumberRange:
+      type: object
+      properties:
+        from:
+          type: number
+        to:
+          type: number
+    DateRange:
+      type: object
+      properties:
+        from:
+          type: string
+          format: date
+        to:
+          type: string
+          format: date
+    SortRequest:
+      type: array
+      items:
+        type: string
