@@ -214,8 +214,8 @@ paths:
           required: true
           description: Unique identifier of the photo
           schema:
-            type: string
-            format: uuid
+            type: integer
+            format: int64
       responses:
         '200':
           description: Photo details retrieved successfully
@@ -244,8 +244,8 @@ paths:
           required: true
           description: Unique identifier of the photo
           schema:
-            type: string
-            format: uuid
+            type: integer
+            format: int64
       responses:
         '200':
           description: Photo deleted successfully
@@ -289,8 +289,8 @@ paths:
           required: true
           description: Unique identifier of the photo
           schema:
-            type: string
-            format: uuid
+            type: integer
+            format: int64
       responses:
         '200':
           description: Photo image retrieved successfully
@@ -335,8 +335,8 @@ components:
       type: object
       properties:
         id:
-          type: string
-          format: uuid
+          type: integer
+          format: int64
           description: Unique user identifier
           example: 550e8400-e29b-41d4-a716-446655440000
         username:
@@ -367,10 +367,10 @@ components:
       type: object
       properties:
         id:
-          type: string
-          format: uuid
+          type: integer
+          format: int64
           description: Unique photo identifier
-          example: 550e8400-e29b-41d4-a716-446655440001
+          example: 1
         name:
           type: string
           maxLength: 40
@@ -386,10 +386,10 @@ components:
       type: object
       properties:
         id:
-          type: string
-          format: uuid
+          type: integer
+          format: int64
           description: Unique photo identifier
-          example: 550e8400-e29b-41d4-a716-446655440001
+          example: 1
         name:
           type: string
           maxLength: 40
@@ -404,12 +404,12 @@ components:
           type: string
           format: uri
           description: URL to retrieve the photo image
-          example: /api/v1/photos/550e8400-e29b-41d4-a716-446655440001/image
+          example: /api/v1/photos/1/image
         uploadedBy:
-          type: string
-          format: uuid
+          type: integer
+          format: int64
           description: ID of the user who uploaded the photo
-          example: 550e8400-e29b-41d4-a716-446655440000
+          example: 1
         mimeType:
           type: string
           description: MIME type of the photo

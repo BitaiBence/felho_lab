@@ -12,3 +12,5 @@ PhotoServiceController then calls PhotoServiceImpl.
 
 PhotoServiceImpl is copied from a previous project that had a pretty similiar functionality to this one, except for instead of photos it provided CRUD for grades and enrollments, and did not have user managemnt endpoints.
 Implemet the methods in PhotoServiceController, modify PhotoServiceImpl(and any other file if needed), so it provides CRUD for photos, and the methods should look similiar to the previus ones.
+
+for maven build, use this command: C:\Program Files\JetBrains\IntelliJ IDEA 2025.2.4\plugins\maven\lib\maven3\bin\mvn.cmd -Didea.version=2025.2.5 -Dmaven.ext.class.path=C:\Program Files\JetBrains\IntelliJ IDEA 2025.2.4\plugins\maven\lib\maven-event-listener.jar -Djansi.passthrough=true -Dstyle.color=always -Dmaven.repo.local=C:\Users\bbitai\.m2\repository clean install -U -e -f pom.xml

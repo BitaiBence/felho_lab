@@ -15,7 +15,6 @@ import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -51,7 +50,7 @@ public class PhotoServiceImpl implements PhotoService {
 		List<PhotoListItem> items = photos.stream()
 				.map(entity -> {
 					PhotoListItem item = new PhotoListItem();
-					item.setId(UUID.nameUUIDFromBytes(entity.getId().toString().getBytes()));
+					item.setId(entity.getId());
 					item.setName(entity.getName());
 					item.setUploadDate(entity.getUploadDate());
 					return item;
@@ -66,17 +65,16 @@ public class PhotoServiceImpl implements PhotoService {
 
 	@Override
 	@Transactional(readOnly = true)
-	@Cacheable(cacheNames = "photosById", key = "#photoId")
 	public Optional<Photo> getPhoto(Long photoId) {
 		return photoRepository.findById(photoId)
 				.map(entity -> {
 					Photo photo = new Photo();
-					photo.setId(UUID.nameUUIDFromBytes(entity.getId().toString().getBytes()));
+					photo.setId(entity.getId());
 					photo.setName(entity.getName());
 					photo.setUploadDate(entity.getUploadDate());
 					photo.setImageUrl(URI.create("/photos/" + entity.getId() + "/image"));
 					photo.setMimeType(entity.getMimeType());
-					photo.setUploadedBy(UUID.nameUUIDFromBytes(entity.getUploadedBy().getId().toString().getBytes()));
+					photo.setUploadedBy(entity.getUploadedBy().getId());
 					return photo;
 				});
 	}
@@ -100,18 +98,17 @@ public class PhotoServiceImpl implements PhotoService {
 		bbitai.domain.Photo saved = photoRepository.saveAndFlush(photo);
 
 		Photo result = new Photo();
-		result.setId(UUID.nameUUIDFromBytes(saved.getId().toString().getBytes()));
+		result.setId(saved.getId());
 		result.setName(saved.getName());
 		result.setUploadDate(saved.getUploadDate());
 		result.setImageUrl(URI.create(saved.getImageUrl()));
 		result.setMimeType(saved.getMimeType());
-		result.setUploadedBy(UUID.nameUUIDFromBytes(saved.getUploadedBy().getId().toString().getBytes()));
+		result.setUploadedBy(saved.getUploadedBy().getId());
 		return result;
 	}
 
 	@Override
 	@Transactional
-	@CacheEvict(cacheNames = "photosById", key = "#photoId")
 	public boolean deletePhoto(Long photoId, Long userId) {
 		return photoRepository.findById(photoId).map(existing -> {
 			if (!existing.getUploadedBy().getId().equals(userId)) {
@@ -146,7 +143,7 @@ public class PhotoServiceImpl implements PhotoService {
 		User saved = userRepository.saveAndFlush(user);
 
 		UserResponse response = new UserResponse();
-		response.setId(UUID.nameUUIDFromBytes(saved.getId().toString().getBytes()));
+		response.setId(saved.getId());
 		response.setUsername(saved.getUsername());
 		response.setCreatedAt(saved.getCreatedAt());
 		return response;
@@ -168,7 +165,7 @@ public class PhotoServiceImpl implements PhotoService {
 		response.setExpiresIn(3600);
 
 		UserResponse userResponse = new UserResponse();
-		userResponse.setId(UUID.nameUUIDFromBytes(user.getId().toString().getBytes()));
+		userResponse.setId(user.getId());
 		userResponse.setUsername(user.getUsername());
 		userResponse.setCreatedAt(user.getCreatedAt());
 		response.setUser(userResponse);

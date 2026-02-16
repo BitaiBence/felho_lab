@@ -93,10 +93,9 @@ public class PhotoServiceController implements PhotosApi, AuthApi {
 	}
 
 	@Override
-	public ResponseEntity<Photo> getPhoto(UUID photoId) {
+	public ResponseEntity<Photo> getPhoto(Long photoId) {
 		try {
-			Long photoIdAsLong = photoId.getMostSignificantBits();
-			var photo = photoService.getPhoto(photoIdAsLong);
+			var photo = photoService.getPhoto(photoId);
 			if (photo.isEmpty()) {
 				return ResponseEntity.notFound().build();
 			}
@@ -107,15 +106,14 @@ public class PhotoServiceController implements PhotosApi, AuthApi {
 	}
 
 	@Override
-	public ResponseEntity<DeletePhoto200Response> deletePhoto(UUID photoId) {
+	public ResponseEntity<DeletePhoto200Response> deletePhoto(Long photoId) {
 		try {
 			Long userId = getCurrentUserId();
 			if (userId == null) {
 				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 			}
 
-			Long photoIdAsLong = photoId.getMostSignificantBits();
-			boolean deleted = photoService.deletePhoto(photoIdAsLong, userId);
+			boolean deleted = photoService.deletePhoto(photoId, userId);
 			if (!deleted) {
 				return ResponseEntity.notFound().build();
 			}
@@ -134,15 +132,14 @@ public class PhotoServiceController implements PhotosApi, AuthApi {
 	}
 
 	@Override
-	public ResponseEntity<Resource> getPhotoImage(UUID photoId) {
+	public ResponseEntity<Resource> getPhotoImage(Long photoId) {
 		try {
-			Long photoIdAsLong = photoId.getMostSignificantBits();
-			var photoOpt = photoService.getPhoto(photoIdAsLong);
+			var photoOpt = photoService.getPhoto(photoId);
 			if (photoOpt.isEmpty()) {
 				return ResponseEntity.notFound().build();
 			}
 
-			byte[] imageData = photoService.getPhotoImage(photoIdAsLong);
+			byte[] imageData = photoService.getPhotoImage(photoId);
 			if (imageData == null) {
 				return ResponseEntity.notFound().build();
 			}

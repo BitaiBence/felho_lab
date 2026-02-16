@@ -5,7 +5,7 @@ spring:
     name: ps
   datasource:
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-    url: jdbc:sqlserver://sqlserver:1433;databaseName=photo;loginTimeout=30;encrypt=true;trustServerCertificate=true
+    url: jdbc:sqlserver://localhost:1433;databaseName=ps;loginTimeout=30;encrypt=true;trustServerCertificate=true
     username: ps
     password: ps
     hikari:
@@ -36,20 +36,13 @@ spring:
         ddl-generation: none
   security.oauth2.client:
     provider:
-      keycloak-impersonate:
-        token-uri: http://keycloak:8080/realms/internal/protocol/openid-connect/token
-      keycloak-clients:
-        token-uri: http://keycloak:8080/realms/clients/protocol/openid-connect/token
+      keycloak:
+        token-uri: http://localhost:8888/realms/clients/protocol/openid-connect/token
     registration:
-      ffk-clients:
-        provider: keycloak-clients
-        client-id: felhasznaloi-fiok-kezelo
-        client-secret: csinalj_egy_sajat_profilt_es_abban_ird_felul_a_sajat_secreteddel
-        authorization-grant-type: client_credentials
-      ffk-impersonate:
-        provider: keycloak-impersonate
-        client-id: felhasznaloi-fiok-kezelo
-        client-secret: 5Bvrwuoz3wwhwDGQC0mGJnVFtyZHLlbO
+      pc:
+        provider: keycloak
+        client-id: pc
+        client-secret: 1wOplbw3uTZjULPlaxsaWM3gxYo2FD1r
         authorization-grant-type: client_credentials
 
 springdoc:
