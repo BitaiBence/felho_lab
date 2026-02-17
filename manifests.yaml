@@ -1,0 +1,342 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgresql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgresql
+  template:
+    metadata:
+      labels:
+        app: postgresql
+    spec:
+      nodeSelector:
+        "kubernetes.io/os": linux
+      containers:
+        - name: postgresql
+          image: docker.io/bitnamilegacy/postgresql:11
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5432
+              name: pgsql
+          env:
+            - name: ALLOW_EMPTY_PASSWORD
+              value: "yes"
+            - name: POSTGRESQL_USERNAME
+              value: "bn_keycloak"
+            - name: POSTGRESQL_DATABASE
+              value: "bitnami_keycloak"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          readinessProbe:
+            tcpSocket:
+              port: 5432
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          livenessProbe:
+            tcpSocket:
+              port: 5432
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          volumeMounts:
+            - name: keycloak-postgresql-data
+              mountPath: /bitnami/postgresql
+      volumes:
+        - name: keycloak-postgresql-data
+          persistentVolumeClaim:
+            claimName: keycloak-postgresql-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgresql
+spec:
+  selector:
+    app: postgresql
+  ports:
+    - name: pgsql
+      port: 5432
+      targetPort: 5432
+  type: ClusterIP
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: keycloak-postgresql-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: keycloak
+  template:
+    metadata:
+      labels:
+        app: keycloak
+    spec:
+      nodeSelector:
+        "kubernetes.io/os": linux
+      containers:
+        - name: keycloak
+          image: docker.io/bitnamilegacy/keycloak:22.0.1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+              name: http
+          env:
+            - name: KEYCLOAK_CREATE_ADMIN_USER
+              value: "true"
+            - name: KEYCLOAK_ADMIN_USER
+              value: "admin"
+            - name: KEYCLOAK_ADMIN_PASSWORD
+              value: "Poinp123"
+            - name: KEYCLOAK_JGROUPS_DISCOVERY_PROTOCOL
+              value: JDBC_PING
+            - name: KEYCLOAK_JGROUPS_DISCOVERY_PROPERTIES
+              value: 'datasource_jndi_name=>java:jboss/datasources/KeycloakDS, initialize_sql=>"CREATE TABLE IF NOT EXISTS JGROUPSPING ( own_addr varchar(200) NOT NULL, cluster_name varchar(200) NOT NULL, created timestamp default current_timestamp, ping_data BYTEA, constraint PK_JGROUPSPING PRIMARY KEY (own_addr, cluster_name))"'
+            - name: KEYCLOAK_DATABASE_HOST
+              value: postgresql
+            - name: KEYCLOAK_DATABASE_USER
+              value: bn_keycloak
+            - name: KEYCLOAK_DATABASE_NAME
+              value: bitnami_keycloak
+            # Empty password allowed for demo; align with docker-compose
+            - name: KEYCLOAK_DATABASE_PASSWORD
+              value: ""
+          resources:
+            requests:
+              cpu: 100m
+              memory: 512Mi
+            limits:
+              cpu: 1000m
+              memory: 1Gi
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 20
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: keycloak
+spec:
+  selector:
+    app: keycloak
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+  type: ClusterIP
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mssql-data
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sqlserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sqlserver
+  template:
+    metadata:
+      labels:
+        app: sqlserver
+    spec:
+      nodeSelector:
+        "kubernetes.io/os": linux
+      containers:
+        - name: sqlserver
+          image: mcr.microsoft.com/mssql/server:2017-latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 1433
+              name: tds
+          env:
+            - name: ACCEPT_EULA
+              value: "Y"
+            - name: MSSQL_SA_PASSWORD
+              value: "Poinp123"
+            - name: MSSQL_COLLATION
+              value: "Hungarian_CI_AS"
+            - name: TZ
+              value: "Europe/Budapest"
+          resources:
+            requests:
+              cpu: 2000m
+              memory: 2Gi
+            limits:
+              cpu: 5000m
+              memory: 5Gi
+          readinessProbe:
+            tcpSocket:
+              port: 1433
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          livenessProbe:
+            tcpSocket:
+              port: 1433
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          volumeMounts:
+            - name: mssqldata
+              mountPath: /var/opt/mssql
+      volumes:
+        - name: mssqldata
+          persistentVolumeClaim:
+            claimName: mssql-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sqlserver
+spec:
+  selector:
+    app: sqlserver
+  ports:
+    - name: tds
+      port: 1434
+      targetPort: 1433
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: photo-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: photo-service
+  template:
+    metadata:
+      labels:
+        app: photo-service
+    spec:
+      nodeSelector:
+        "kubernetes.io/os": linux
+      containers:
+        - name: photo-service
+          image: bbitai-photo-service:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+          resources:
+            requests:
+              cpu: 1000m
+              memory: 1000Mi
+            limits:
+              cpu: 4000m
+              memory: 3000Mi
+          startupProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            failureThreshold: 25
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            periodSeconds: 5
+#      initContainers:
+#        - name: wait-for-rabbitmq
+#          image: busybox:1.37.0
+#          command:
+#            ["sh", "-c", "until nc -zv rabbitmq 5672; do echo waiting for rabbitmq; sleep 2; done;"]
+#          resources:
+#            requests:
+#              cpu: 1m
+#              memory: 50Mi
+#            limits:
+#              cpu: 100m
+#              memory: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: photo-service
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 3000
+      targetPort: 3000
+  selector:
+    app: photo-service
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: photo-stripprefix
+spec:
+  stripPrefix:
+    prefixes:
+      - /api/photo
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: photo-service-ingress
+  annotations:
+    traefik.ingress.kubernetes.io/router.middlewares: default-photo-stripprefix@kubernetescrd
+    traefik.ingress.kubernetes.io/router.entrypoints: "web8090"
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /api/photo
+            pathType: Prefix
+            backend:
+              service:
+                name: photo-service
+                port:
+                  number: 3000

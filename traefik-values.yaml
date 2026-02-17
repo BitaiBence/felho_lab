@@ -1,0 +1,12 @@
+ports:
+  # Additional HTTP entry point on 8090 (for other web apps)
+  web8090:
+    port: 8090
+    expose:
+      default: true
+    exposedPort: 8090
+    protocol: TCP
+
+ingressRoute:
+  dashboard:
+    enabled: true

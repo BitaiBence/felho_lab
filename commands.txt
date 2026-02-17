@@ -1,3 +1,43 @@
+cd C:\work\bbitai\felho_lab
+
+cd ..
+docker compose -f pdocker-compose.yml build
+
+cd felho_lab
+kubectl apply -f manifests.yaml
+kubectl get pod
+
+helm repo add traefik https://traefik.github.io/charts
+helm repo update
+
+helm uninstall traefik
+helm list --all-namespaces
+
+helm install traefik traefik/traefik --set ports.web.nodePort=32080 --set service.type=NodePort --set "additionalArguments={--api.insecure=true}"
+helm upgrade traefik traefik/traefik --set ports.web.nodePort=32080 --set service.type=NodePort --set "additionalArguments={--api.insecure=true}"
+
+helm install traefik traefik/traefik -f traefik-values.yaml
+helm upgrade traefik traefik/traefik -f traefik-values.yaml
+
+kubectl delete deployment photo-service
+kubectl delete deployment sqlserver
+kubectl get deployment
+
+kubectl logs photo-service-service-
+kubectl describe pod photo-service-
+
+kubectl port-forward pod/sqlserver-5f5585b58-bjj8j 1434:1433
+127.0.0.1,1434
+
+kubectl port-forward pod/keycloak-d786fd4f-77mbk 18080:8080
+
+http://localhost:8090/api/photo/photos?sortBy=date&order=desc
+http://localhost:8090/api/photo/photos/1
+
+
+
+
+
 This is the backend for a photo album app.
 
 The features of the app essentially is user management, and CRUD functionality for photos. Here is the detailed functionality:

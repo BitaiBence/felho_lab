@@ -16,6 +16,12 @@ tags:
     description: Photo management operations
 
 paths:
+  /health:
+    get:
+      summary: Retrieve all students
+      responses:
+        '200':
+          description: A list of students
   /auth/register:
     post:
       tags:

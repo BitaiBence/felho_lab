@@ -27,7 +27,7 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
-public class PhotoServiceController implements PhotosApi, AuthApi {
+public class PhotoServiceController implements PhotosApi, AuthApi,HealthApi {
 
 	@Autowired
 	private PhotoService photoService;
@@ -38,6 +38,11 @@ public class PhotoServiceController implements PhotosApi, AuthApi {
 	@Override
 	public Optional<NativeWebRequest> getRequest() {
 		return Optional.ofNullable(request);
+	}
+
+	@Override
+	public ResponseEntity<Void> healthGet() {
+		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
 	// Helper method to extract user ID from authentication

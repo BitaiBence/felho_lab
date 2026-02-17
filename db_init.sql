@@ -1,13 +1,6 @@
 -- Photo Album Web App - SQL Server Database Script
 -- Creates USERS and PHOTOS tables with sample data
 
--- Drop existing tables if they exist
-IF OBJECT_ID('dbo.PHOTOS', 'U') IS NOT NULL
-    DROP TABLE dbo.PHOTOS;
-
-IF OBJECT_ID('dbo.USERS', 'U') IS NOT NULL
-    DROP TABLE dbo.USERS;
-
 -- Create USERS table
 CREATE TABLE dbo.USERS (
     id BIGINT PRIMARY KEY IDENTITY(1,1),
