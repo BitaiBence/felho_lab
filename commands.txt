@@ -34,8 +34,12 @@ kubectl port-forward pod/keycloak-d786fd4f-77mbk 18080:8080
 http://localhost:8090/api/photo/photos?sortBy=date&order=desc
 http://localhost:8090/api/photo/photos/1
 
-
-
+realm:skal
+http://localhost:18080/realms/skal/protocol/openid-connect/auth
+http://localhost:18080/realms/skal/protocol/openid-connect/token
+client id: ps
+user:ps PS_USER realm roleal
+client secret: fn41Zt7X3zWGas71RNazJ79Eibli7hDd
 
 
 This is the backend for a photo album app.

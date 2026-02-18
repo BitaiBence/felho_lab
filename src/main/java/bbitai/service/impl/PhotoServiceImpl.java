@@ -10,7 +10,9 @@ import bbitai.repository.PhotoRepository;
 import bbitai.repository.UserRepository;
 import bbitai.service.PhotoService;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -121,10 +123,16 @@ public class PhotoServiceImpl implements PhotoService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public byte[] getPhotoImage(Long photoId) {
-		return photoRepository.findById(photoId)
+	public InputStream getPhotoImage(Long photoId) {
+		byte[] imageByte = photoRepository.findById(photoId)
 				.map(bbitai.domain.Photo::getImageData)
 				.orElse(null);
+
+		if ( imageByte != null && imageByte.length != 0 ) {
+			return new ByteArrayInputStream(imageByte);
+		}
+
+		return null;
 	}
 
 	@Override

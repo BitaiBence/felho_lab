@@ -10,6 +10,7 @@ import hu.avhga.g3.lib.persistence.PageableBuilder;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +25,7 @@ public interface PhotoService {
 
 	boolean deletePhoto(Long photoId, Long userId);
 
-	byte[] getPhotoImage(Long photoId);
+	InputStream getPhotoImage(Long photoId);
 
 	// User management
 	UserResponse registerUser(String username, String password);

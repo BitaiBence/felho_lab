@@ -10,12 +10,14 @@ import bbitai.api.model.User;
 import bbitai.api.model.UserResponse;
 import bbitai.service.PhotoService;
 
+import java.io.InputStream;
 import java.util.Optional;
 import java.util.UUID;
 
 import hu.avhga.g3.lib.security.AuthorizationHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -144,20 +146,19 @@ public class PhotoServiceController implements PhotosApi, AuthApi,HealthApi {
 				return ResponseEntity.notFound().build();
 			}
 
-			byte[] imageData = photoService.getPhotoImage(photoId);
-			if (imageData == null) {
-				return ResponseEntity.notFound().build();
-			}
+			InputStream imageData = photoService.getPhotoImage(photoId);
 
-			Resource resource = new ByteArrayResource(imageData);
-			String mimeType = photoOpt.get().getMimeType();
-			if (mimeType == null) {
-				mimeType = "application/octet-stream";
-			}
+			InputStreamResource inputStreamResource = new InputStreamResource(imageData);
+			return ResponseEntity.ok(inputStreamResource);
 
-			return ResponseEntity.ok()
-					.header("Content-Type", mimeType)
-					.body(resource);
+//			String mimeType = photoOpt.get().getMimeType();
+//			if (mimeType == null) {
+//				mimeType = "application/octet-stream";
+//			}
+
+//			return ResponseEntity.ok()
+//					.header("Content-Type", mimeType)
+//					.body(resource);
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
 		}
