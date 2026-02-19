@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { Photo, PhotoListItem, PhotoListResponse } from '../models';
 
@@ -8,38 +8,65 @@ export type SortBy = 'name' | 'date';
 export type SortOrder = 'asc' | 'desc';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class PhotoService {
-  private readonly baseUrl = environment.apiBaseUrl;
+    private readonly baseUrl = environment.apiBaseUrl;
 
-  constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) {}
 
-  listPhotos(sortBy: SortBy = 'date', order: SortOrder = 'desc'): Observable<PhotoListResponse> {
-    const params = new HttpParams()
-      .set('sortBy', sortBy)
-      .set('order', order);
-    
-    return this.http.get<PhotoListResponse>(`${this.baseUrl}/photos`, { params });
-  }
+    private getAuthHeader(): HttpHeaders | null {
+        const token = localStorage.getItem('jwt');
+        if (!token) {
+            console.error('Authentication error: No JWT token found in localStorage.');
+            return null;
+        }
+        return new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    }
 
-  getPhoto(photoId: number): Observable<Photo> {
-    return this.http.get<Photo>(`${this.baseUrl}/photos/${photoId}`);
-  }
+    listPhotos(sortBy: SortBy = 'date', order: SortOrder = 'desc'): Observable<PhotoListResponse> {
+        const headers = this.getAuthHeader();
+        if (!headers) {
+            return of({ photos: [], total: 0 });
+        }
 
-  getImageUrl(photoId: number): string {
-    return `${this.baseUrl}/photos/${photoId}/image`;
-  }
+        const params = new HttpParams()
+            .set('sortBy', sortBy)
+            .set('order', order);
 
-  uploadPhoto(file: File, name: string): Observable<Photo> {
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('name', name);
-    
-    return this.http.post<Photo>(`${this.baseUrl}/photos`, formData);
-  }
+        return this.http.get<PhotoListResponse>(`${this.baseUrl}/photos`, { params, headers });
+    }
 
-  deletePhoto(photoId: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/photos/${photoId}`);
-  }
+    getPhoto(photoId: number): Observable<Photo> {
+        const headers = this.getAuthHeader();
+        if (!headers) {
+            throw new Error('Authentication error: No JWT token found.');
+        }
+        return this.http.get<Photo>(`${this.baseUrl}/photos/${photoId}`, { headers });
+    }
+
+    getImageUrl(photoId: number): string {
+        const token = localStorage.getItem('jwt');
+        return `${this.baseUrl}/photos/${photoId}/image?token=${token}`;
+    }
+
+    uploadPhoto(file: File, name: string): Observable<Photo> {
+        const headers = this.getAuthHeader();
+        if (!headers) {
+            throw new Error('Authentication error: No JWT token found.');
+        }
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('name', name);
+
+        return this.http.post<Photo>(`${this.baseUrl}/photos`, formData, { headers });
+    }
+
+    deletePhoto(photoId: number): Observable<void> {
+        const headers = this.getAuthHeader();
+        if (!headers) {
+            throw new Error('Authentication error: No JWT token found.');
+        }
+        return this.http.delete<void>(`${this.baseUrl}/photos/${photoId}`, { headers });
+    }
 }

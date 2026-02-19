@@ -30,6 +30,8 @@ kubectl describe pod photo-service-
 
 kubectl port-forward pod/sqlserver-5f5585b58-bjj8j 1434:1433
 127.0.0.1,1434
+username: ps
+pass: ps
 
 kubectl port-forward pod/keycloak-d786fd4f-77mbk 18080:8080
 
