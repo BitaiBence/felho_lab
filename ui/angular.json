@@ -30,7 +30,9 @@
               "@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [
+              "src/assets/js/keycloak.min.25.0.6.js"
+            ]
           },
           "configurations": {
             "production": {
