@@ -1,0 +1,68 @@
+.photo-list-container {
+  padding: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.sort-controls {
+  display: flex;
+  gap: 16px;
+
+  mat-form-field {
+    width: 150px;
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+}
+
+.photo-table {
+  width: 100%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.photo-row {
+  cursor: pointer;
+
+  &:hover {
+    background-color: #f5f5f5;
+  }
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60px 20px;
+  color: #666;
+
+  mat-icon {
+    font-size: 64px;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 16px;
+    color: #ccc;
+  }
+
+  p {
+    font-size: 18px;
+    margin: 0;
+  }
+}

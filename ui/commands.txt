@@ -1,0 +1,18 @@
+
+Im creating a photo album web app. this project is the frontend of it.now its mostly empty.
+
+The api of the backend is defined in ps_api.yaml. for now ignore the /auth and /health endpoints.the descriptions of the endpoints might be incorrrect in it, so i give a short description of each endpoint:
+
+baseUrl:http://localhost:8090/api/photo
+get the details of a photo (but not the image file): GET {{baseUrl}}/photos/:photoId
+get the image file: GET {{baseUrl}}/photos/:photoId/image
+list all photos, with optional sorting(sortBy can be name or date, order can be asc or desc): GET {{baseUrl}}/photos?sortBy=date&order=desc
+upload new photo: POST {{baseUrl}}/photos
+delete photo: DELETE {{baseUrl}}/photos/:photoId
+
+create a simple angular app, that has the following:
+all the photos in a list, only the name and the upload date(using PhotoListItem), sorted either by name or by date.
+The actual photo is only visible when cliking on a list item.
+The user can select some of the list items, and if they click the delete button, a delete request is sent for each photo to the backend.
+There is a upload button which opens a form. The form has a file select button, which lets the user browse the computer and select the image file they want to upload.the name of the image in the rest request is going to be the filname.aftter selecting the file there is a ok button, which sends the POST request to the backend.
+On the top menu bar a login, logout, registter button, and the logged in users name.For now only generate empty implementation for the button clicks.

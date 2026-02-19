@@ -1,0 +1,53 @@
+<h2 mat-dialog-title>Upload Photo</h2>
+
+<mat-dialog-content>
+  <div class="upload-area">
+    <input 
+      type="file" 
+      #fileInput 
+      (change)="onFileSelected($event)"
+      accept=".png,.jpg,.jpeg,image/png,image/jpeg"
+      hidden>
+    
+    <button 
+      mat-stroked-button 
+      color="primary" 
+      (click)="fileInput.click()"
+      [disabled]="isUploading">
+      <mat-icon>folder_open</mat-icon>
+      Browse Files
+    </button>
+
+    <div class="file-info" *ngIf="selectedFile">
+      <mat-icon>image</mat-icon>
+      <span class="file-name">{{ fileName }}</span>
+      <span class="file-size">({{ (selectedFile.size / 1024).toFixed(1) }} KB)</span>
+    </div>
+
+    <div class="file-error" *ngIf="fileError">
+      <mat-icon>error</mat-icon>
+      {{ fileError }}
+    </div>
+
+    <p class="hint">
+      Allowed formats: PNG, JPEG<br>
+      Filename will be truncated to 40 characters
+    </p>
+  </div>
+
+  <div class="loading-spinner" *ngIf="isUploading">
+    <mat-spinner diameter="30"></mat-spinner>
+    <span>Uploading...</span>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()" [disabled]="isUploading">Cancel</button>
+  <button 
+    mat-raised-button 
+    color="primary" 
+    (click)="upload()"
+    [disabled]="!selectedFile || isUploading">
+    OK
+  </button>
+</mat-dialog-actions>

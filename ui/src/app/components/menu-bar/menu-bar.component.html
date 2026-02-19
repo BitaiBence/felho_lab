@@ -1,0 +1,27 @@
+<mat-toolbar color="primary">
+  <span class="app-title">
+    <mat-icon>photo_library</mat-icon>
+    Photo Album
+  </span>
+
+  <span class="spacer"></span>
+
+  <ng-container *ngIf="currentUser$ | async as user; else notLoggedIn">
+    <span class="username">{{ user.username }}</span>
+    <button mat-button (click)="onLogout()">
+      <mat-icon>logout</mat-icon>
+      Logout
+    </button>
+  </ng-container>
+
+  <ng-template #notLoggedIn>
+    <button mat-button (click)="onLogin()">
+      <mat-icon>login</mat-icon>
+      Login
+    </button>
+    <button mat-button (click)="onRegister()">
+      <mat-icon>person_add</mat-icon>
+      Register
+    </button>
+  </ng-template>
+</mat-toolbar>
