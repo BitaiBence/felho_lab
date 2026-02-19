@@ -424,27 +424,17 @@ spec:
                 port:
                   number: 80
 ---
-apiVersion: traefik.io/v1alpha1
-kind: Middleware
-metadata:
-  name: keycloak-stripprefix
-spec:
-  stripPrefix:
-    prefixes:
-      - /keycloak
----
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: keycloak-ingress
   annotations:
-    traefik.ingress.kubernetes.io/router.middlewares: default-keycloak-stripprefix@kubernetescrd
-    traefik.ingress.kubernetes.io/router.entrypoints: "web8090"
+    traefik.ingress.kubernetes.io/router.entrypoints: "web8091"
 spec:
   rules:
     - http:
         paths:
-          - path: /keycloak
+          - path: /
             pathType: Prefix
             backend:
               service:

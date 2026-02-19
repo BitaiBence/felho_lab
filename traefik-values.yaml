@@ -6,6 +6,12 @@ ports:
       default: true
     exposedPort: 8090
     protocol: TCP
+  web8091:
+    port: 8091
+    expose:
+      default: true
+    exposedPort: 8091
+    protocol: TCP
 
 ingressRoute:
   dashboard:
