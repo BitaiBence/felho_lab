@@ -12,7 +12,53 @@ export class AuthService {
     private currentUserSubject = new BehaviorSubject<UserResponse | null>(null);
     currentUser$: Observable<UserResponse | null> = this.currentUserSubject.asObservable();
 
-    constructor() {}
+    private keycloak: any;
+
+    constructor() {
+        this.keycloak = new Keycloak({
+            url: 'http://localhost:18080',
+            realm: 'skal',
+            clientId: 'ps'
+        });
+
+        this.keycloak.onAuthLogout = () => {
+            console.log('Logout esemény történt');
+            this.currentUserSubject.next(null);
+            localStorage.removeItem('jwt');
+        };
+    }
+
+    /**
+     * Called once at app startup via APP_INITIALIZER.
+     * On first visit (no auth code): check-sso detects no session, user is not logged in.
+     * After redirect back from Keycloak: check-sso processes the auth response and retrieves the token.
+     */
+    init(): Promise<boolean> {
+        return this.keycloak.init({
+            onLoad: 'check-sso',
+            scope: 'openid profile email roles',
+            redirectUri: window.location.origin,
+        }).then((authenticated: boolean) => {
+            if (authenticated) {
+                console.log('Authenticated!');
+                console.log('JWT:', this.keycloak.token);
+                localStorage.setItem('jwt', this.keycloak.token);
+
+                const parsed = this.keycloak.tokenParsed;
+                this.currentUserSubject.next({
+                    id: 0,
+                    username: parsed?.preferred_username ?? '',
+                    createdAt: '',
+                });
+            } else {
+                console.log('Not authenticated');
+            }
+            return authenticated;
+        }).catch((err: any) => {
+            console.error('Keycloak init failed', err);
+            return false;
+        });
+    }
 
     get currentUser(): UserResponse | null {
         return this.currentUserSubject.value;
@@ -22,50 +68,29 @@ export class AuthService {
         return this.currentUserSubject.value !== null;
     }
 
-    login(username: string, password: string): void {
-        console.log('Login clicked', { username, password });
-
-        var keycloak = new Keycloak({
-            url: 'http://localhost:18080',
-            realm: 'skal',
-            clientId: 'ps'
-        });
-// Additional configuration for Keycloak endpoints
-        keycloak.tokenUri = 'http://localhost:18080/realms/skal/protocol/openid-connect/token';
-        keycloak.userInfoUri = 'http://localhost:18080/realms/skal/protocol/openid-connect/userinfo';
-        keycloak.jwkSetUri = 'http://localhost:18080/realms/skal/protocol/openid-connect/certs';
-        keycloak.authorizationUri = 'http://localhost:18080/realms/skal/protocol/openid-connect/auth';
-        keycloak.issuerUri = 'http://localhost:18080/realms/skal';
-        keycloak.userNameAttribute = 'preferred_username';
-        keycloak.onAuthLogout = () => {
-            console.log('Logout esemény történt');
-        };
-
-        keycloak.init({
-            onLoad: 'login-required',
+    /** Triggers redirect to Keycloak login page. */
+    login(): void {
+        this.keycloak.login({
+            redirectUri: window.location.origin,
             scope: 'openid profile email roles',
-            redirectUri: window.location,
-        }).then(function (authenticated:boolean) {
-            if (authenticated) {
-                console.log('JWT:', keycloak.token);
-                localStorage.setItem('jwt', keycloak.token);
-            } else {
-                console.log('not authenticated');
-            }
-        }).catch(function () {
-            console.log('failed to initialize');
         });
     }
-
 
     logout(): void {
-        // TODO: Implement logout API call
-        console.log('Logout clicked');
+        localStorage.removeItem('jwt');
         this.currentUserSubject.next(null);
+        this.keycloak.logout({
+            redirectUri: window.location.origin,
+        });
     }
 
-    register(username: string, password: string): void {
-        // TODO: Implement register API call
-        console.log('Register clicked', { username, password });
+    register(): void {
+        this.keycloak.register({
+            redirectUri: window.location.origin,
+        });
+    }
+
+    getToken(): string | null {
+        return this.keycloak.token ?? localStorage.getItem('jwt');
     }
 }

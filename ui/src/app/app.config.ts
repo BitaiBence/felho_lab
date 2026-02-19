@@ -1,15 +1,26 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, APP_INITIALIZER, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 import { routes } from './app.routes';
+import { AuthService } from './services/auth.service';
+
+function initializeKeycloak(authService: AuthService): () => Promise<boolean> {
+    return () => authService.init();
+}
 
 export const appConfig: ApplicationConfig = {
-  providers: [
-    provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes),
-    provideHttpClient(),
-    provideAnimationsAsync()
-  ]
+    providers: [
+        provideZoneChangeDetection({ eventCoalescing: true }),
+        provideRouter(routes),
+        provideHttpClient(),
+        provideAnimationsAsync(),
+        {
+            provide: APP_INITIALIZER,
+            useFactory: initializeKeycloak,
+            deps: [AuthService],
+            multi: true,
+        },
+    ]
 };
