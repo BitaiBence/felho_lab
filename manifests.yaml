@@ -372,13 +372,13 @@ spec:
               memory: 512Mi
           readinessProbe:
             httpGet:
-              path: /index.html
+              path: /
               port: 80
             initialDelaySeconds: 5
             periodSeconds: 10
           livenessProbe:
             httpGet:
-              path: /index.html
+              path: /
               port: 80
             initialDelaySeconds: 10
             periodSeconds: 20

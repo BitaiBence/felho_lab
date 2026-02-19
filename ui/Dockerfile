@@ -23,7 +23,7 @@ RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copy built application from builder
-COPY --from=builder /app/dist /usr/share/nginx/html
+COPY --from=builder /app/dist/photo-ui/browser /usr/share/nginx/html
 
 # Expose port
 EXPOSE 80
