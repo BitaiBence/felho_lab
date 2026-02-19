@@ -6,8 +6,7 @@
 
   <span class="spacer"></span>
 
-  <ng-container *ngIf="currentUser$ | async as user; else notLoggedIn">
-    <span class="username">{{ user.username }}</span>
+  <ng-container>
     <button mat-button (click)="onLogout()">
       <mat-icon>logout</mat-icon>
       Logout

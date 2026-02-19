@@ -9,21 +9,26 @@ declare const Keycloak: any;
     providedIn: 'root'
 })
 export class AuthService {
-    private currentUserSubject = new BehaviorSubject<UserResponse | null>(null);
-    currentUser$: Observable<UserResponse | null> = this.currentUserSubject.asObservable();
 
     private keycloak: any;
 
     constructor() {
         this.keycloak = new Keycloak({
-            url: 'http://localhost:18080',
+            url: 'http://localhost:8080',
             realm: 'skal',
-            clientId: 'ps'
+            clientId: 'ui'
         });
+
+        // Additional configuration for Keycloak endpoints
+        this.keycloak.tokenUri = 'http://localhost:8080/realms/skal/protocol/openid-connect/token';
+        this.keycloak.userInfoUri = 'http://localhost:8080/realms/skal/protocol/openid-connect/userinfo';
+        this.keycloak.jwkSetUri = 'http://localhost:8080/realms/skal/protocol/openid-connect/certs';
+        this.keycloak.authorizationUri = 'http://localhost:8080/realms/skal/protocol/openid-connect/auth';
+        this.keycloak.issuerUri = 'http://localhost:8080/realms/skal';
+        this.keycloak.userNameAttribute = 'preferred_username';
 
         this.keycloak.onAuthLogout = () => {
             console.log('Logout esemény történt');
-            this.currentUserSubject.next(null);
             localStorage.removeItem('jwt');
         };
     }
@@ -35,21 +40,14 @@ export class AuthService {
      */
     init(): Promise<boolean> {
         return this.keycloak.init({
-            onLoad: 'check-sso',
+            onLoad: 'login-required',
             scope: 'openid profile email roles',
-            redirectUri: window.location.origin,
+            redirectUri: 'http://localhost:8090/ui/',
         }).then((authenticated: boolean) => {
             if (authenticated) {
                 console.log('Authenticated!');
                 console.log('JWT:', this.keycloak.token);
                 localStorage.setItem('jwt', this.keycloak.token);
-
-                const parsed = this.keycloak.tokenParsed;
-                this.currentUserSubject.next({
-                    id: 0,
-                    username: parsed?.preferred_username ?? '',
-                    createdAt: '',
-                });
             } else {
                 console.log('Not authenticated');
             }
@@ -58,14 +56,6 @@ export class AuthService {
             console.error('Keycloak init failed', err);
             return false;
         });
-    }
-
-    get currentUser(): UserResponse | null {
-        return this.currentUserSubject.value;
-    }
-
-    get isLoggedIn(): boolean {
-        return this.currentUserSubject.value !== null;
     }
 
     /** Triggers redirect to Keycloak login page. */
@@ -78,15 +68,14 @@ export class AuthService {
 
     logout(): void {
         localStorage.removeItem('jwt');
-        this.currentUserSubject.next(null);
         this.keycloak.logout({
-            redirectUri: window.location.origin,
+            redirectUri: 'http://localhost:8090/ui/',
         });
     }
 
     register(): void {
         this.keycloak.register({
-            redirectUri: window.location.origin,
+            redirectUri: 'http://localhost:8090/ui/',
         });
     }
 

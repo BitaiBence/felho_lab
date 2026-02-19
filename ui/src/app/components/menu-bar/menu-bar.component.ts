@@ -19,13 +19,8 @@ import { AuthService } from '../../services/auth.service';
     styleUrl: './menu-bar.component.scss'
 })
 export class MenuBarComponent {
-    currentUser$ = this.authService.currentUser$;
-
     constructor(private authService: AuthService) {}
 
-    get isLoggedIn(): boolean {
-        return this.authService.isLoggedIn;
-    }
 
     onLogin(): void {
         this.authService.login();
