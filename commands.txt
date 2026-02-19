@@ -54,7 +54,12 @@ The features of the app essentially is user management, and CRUD functionality f
 The api of the app is defined in ps_api.yaml. using openapi-genrator-maven-plugin the api is generated, and then implemented in PhotoServiceController.
 PhotoServiceController then calls PhotoServiceImpl.
 
-PhotoServiceImpl is copied from a previous project that had a pretty similiar functionality to this one, except for instead of photos it provided CRUD for grades and enrollments, and did not have user managemnt endpoints.
-Implemet the methods in PhotoServiceController, modify PhotoServiceImpl(and any other file if needed), so it provides CRUD for photos, and the methods should look similiar to the previus ones.
+
+
+i have added the ui project to tthe ui folder so you can see them, it will be removed later.
+This app runs in kubernetes, using manifests.yaml. I use pdocker-compose.yml to build the images. I need you to generate a Dockerfile for the ui project, add the ui project to the pdocker-compose.yml file, and the manifest.yml file. In the kuberentes i use traefik for routing. trafeik is not present in the manifest, its added with the helm install traefik traefik/traefik -f traefik-values.yaml command. traefik-values.yaml contains the config for it. in the manifest.yaml the photo-service-ingress and photo-stripprefix is used by traefik for the routing configuartion. We probably need a similiar ingress and stripprefix for the ui project.
+
+
+
 
 for maven build, use this command: C:\Program Files\JetBrains\IntelliJ IDEA 2025.2.4\plugins\maven\lib\maven3\bin\mvn.cmd -Didea.version=2025.2.5 -Dmaven.ext.class.path=C:\Program Files\JetBrains\IntelliJ IDEA 2025.2.4\plugins\maven\lib\maven-event-listener.jar -Djansi.passthrough=true -Dstyle.color=always -Dmaven.repo.local=C:\Users\bbitai\.m2\repository clean install -U -e -f pom.xml

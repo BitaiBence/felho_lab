@@ -49,6 +49,17 @@ services:
     networks:
       - backend_services
 
+  photo-ui:
+    build: felho_lab/ui
+    container_name: photo-ui
+    restart: always
+    ports:
+      - 4200:80
+    networks:
+      - backend_services
+    depends_on:
+      - photo-service
+
 networks:
   backend_services:
     driver: bridge

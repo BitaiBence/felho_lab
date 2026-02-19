@@ -340,3 +340,86 @@ spec:
                 name: photo-service
                 port:
                   number: 3000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: photo-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: photo-ui
+  template:
+    metadata:
+      labels:
+        app: photo-ui
+    spec:
+      nodeSelector:
+        "kubernetes.io/os": linux
+      containers:
+        - name: photo-ui
+          image: bbitai-photo-ui:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          readinessProbe:
+            httpGet:
+              path: /index.html
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /index.html
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 20
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: photo-ui
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+  selector:
+    app: photo-ui
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: ui-stripprefix
+spec:
+  stripPrefix:
+    prefixes:
+      - /ui
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: photo-ui-ingress
+  annotations:
+    traefik.ingress.kubernetes.io/router.middlewares: default-ui-stripprefix@kubernetescrd
+    traefik.ingress.kubernetes.io/router.entrypoints: "web8090"
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /ui
+            pathType: Prefix
+            backend:
+              service:
+                name: photo-ui
+                port:
+                  number: 80
