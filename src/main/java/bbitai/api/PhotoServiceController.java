@@ -14,6 +14,8 @@ import java.io.InputStream;
 import java.util.Optional;
 import java.util.UUID;
 
+import hu.avhga.g3.lib.exception.BaseErrorCode;
+import hu.avhga.g3.lib.exception.ServiceException;
 import hu.avhga.g3.lib.security.AuthorizationHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -47,24 +49,13 @@ public class PhotoServiceController implements PhotosApi, AuthApi,HealthApi {
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
-	// Helper method to extract user ID from authentication
-	private Long getCurrentUserId() {
-		String currentUserName = AuthorizationHelper.getCurrentUserName();
-		// In a real system, you would look up the user by username to get their ID
-		// For now, we'll return a placeholder
-		// This should be improved based on your actual user management strategy
-		if (currentUserName == null) {
-			return null;
-		}
-		// This is a simplified version - in production you'd query the database
-		// For now, we'll assume the user exists and has a reasonable ID
-		return 1L; // TODO: Implement proper user ID retrieval from authenticated user
-	}
-
 	// ==================== Photos API ====================
 
 	@Override
 	public ResponseEntity<ListPhotos200Response> listPhotos(String sortBy, String order) {
+		if(!AuthorizationHelper.hasAuthority("ROLE_PS_USER") ){
+			throw new ServiceException(BaseErrorCode.CL003);
+		}
 		try {
 			ListPhotos200Response response = photoService.listPhotos(sortBy, order);
 			return ResponseEntity.ok(response);
@@ -75,6 +66,9 @@ public class PhotoServiceController implements PhotosApi, AuthApi,HealthApi {
 
 	@Override
 	public ResponseEntity<Photo> uploadPhoto(String name, MultipartFile file) {
+		if(!AuthorizationHelper.hasAuthority("ROLE_PS_USER") ){
+			throw new ServiceException(BaseErrorCode.CL003);
+		}
 		try {
 			if (name == null || name.length() > 40) {
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
@@ -84,12 +78,12 @@ public class PhotoServiceController implements PhotosApi, AuthApi,HealthApi {
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 			}
 
-			Long userId = getCurrentUserId();
-			if (userId == null) {
-				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+			String username= AuthorizationHelper.getCurrentUserName();
+			if(username==null) {
+				throw new ServiceException(BaseErrorCode.CL002,"Nincs username a tokenben.");
 			}
 
-			Photo photo = photoService.uploadPhoto(name, file, userId);
+			Photo photo = photoService.uploadPhoto(name, file, username);
 			return ResponseEntity.status(HttpStatus.CREATED).body(photo);
 		} catch (Exception e) {
 			if (e.getMessage() != null && e.getMessage().contains("User not found")) {
@@ -101,6 +95,9 @@ public class PhotoServiceController implements PhotosApi, AuthApi,HealthApi {
 
 	@Override
 	public ResponseEntity<Photo> getPhoto(Long photoId) {
+		if(!AuthorizationHelper.hasAuthority("ROLE_PS_USER") ){
+			throw new ServiceException(BaseErrorCode.CL003);
+		}
 		try {
 			var photo = photoService.getPhoto(photoId);
 			if (photo.isEmpty()) {
@@ -114,16 +111,11 @@ public class PhotoServiceController implements PhotosApi, AuthApi,HealthApi {
 
 	@Override
 	public ResponseEntity<DeletePhoto200Response> deletePhoto(Long photoId) {
+		if(!AuthorizationHelper.hasAuthority("ROLE_PS_USER") ){
+			throw new ServiceException(BaseErrorCode.CL003);
+		}
 		try {
-			Long userId = getCurrentUserId();
-			if (userId == null) {
-				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-			}
-
-			boolean deleted = photoService.deletePhoto(photoId, userId);
-			if (!deleted) {
-				return ResponseEntity.notFound().build();
-			}
+			photoService.deletePhoto(photoId);
 
 			DeletePhoto200Response response = new DeletePhoto200Response();
 			response.setMessage("Photo deleted successfully");
@@ -209,12 +201,8 @@ public class PhotoServiceController implements PhotosApi, AuthApi,HealthApi {
 	@Override
 	public ResponseEntity<LogoutUser200Response> logoutUser() {
 		try {
-			Long userId = getCurrentUserId();
-			if (userId == null) {
-				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-			}
 
-			photoService.logoutUser(userId);
+			photoService.logoutUser(null);
 
 			LogoutUser200Response response = new LogoutUser200Response();
 			response.setMessage("Successfully logged out");

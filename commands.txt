@@ -5,6 +5,7 @@ docker compose -f pdocker-compose.yml build
 
 cd felho_lab
 kubectl delete deployment photo-ui
+kubectl delete deployment photo-service
 kubectl apply -f manifests.yaml
 kubectl get pod
 

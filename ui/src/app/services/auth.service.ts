@@ -15,16 +15,16 @@ export class AuthService {
     constructor() {
         this.keycloak = new Keycloak({
             url: 'http://localhost:8091',
-            realm: 'skal',
+            realm: 'photo',
             clientId: 'ui'
         });
 
         // Additional configuration for Keycloak endpoints
-        this.keycloak.tokenUri = 'http://localhost:8091/realms/skal/protocol/openid-connect/token';
-        this.keycloak.userInfoUri = 'http://localhost:8091/realms/skal/protocol/openid-connect/userinfo';
-        this.keycloak.jwkSetUri = 'http://localhost:8091/realms/skal/protocol/openid-connect/certs';
-        this.keycloak.authorizationUri = 'http://localhost:8091/realms/skal/protocol/openid-connect/auth';
-        this.keycloak.issuerUri = 'http://localhost:8091/realms/skal';
+        this.keycloak.tokenUri = 'http://localhost:8091/realms/photo/protocol/openid-connect/token';
+        this.keycloak.userInfoUri = 'http://localhost:8091/realms/photo/protocol/openid-connect/userinfo';
+        this.keycloak.jwkSetUri = 'http://localhost:8091/realms/photo/protocol/openid-connect/certs';
+        this.keycloak.authorizationUri = 'http://localhost:8091/realms/photo/protocol/openid-connect/auth';
+        this.keycloak.issuerUri = 'http://localhost:8091/realms/photo';
         this.keycloak.userNameAttribute = 'preferred_username';
 
         this.keycloak.onAuthLogout = () => {

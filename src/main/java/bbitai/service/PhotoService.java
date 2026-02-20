@@ -21,9 +21,9 @@ public interface PhotoService {
 
 	Optional<Photo> getPhoto(Long photoId);
 
-	Photo uploadPhoto(String name, MultipartFile file, Long userId) throws Exception;
+	Photo uploadPhoto(String name, MultipartFile file, String username) throws Exception;
 
-	boolean deletePhoto(Long photoId, Long userId);
+	void deletePhoto(Long photoId);
 
 	InputStream getPhotoImage(Long photoId);
 

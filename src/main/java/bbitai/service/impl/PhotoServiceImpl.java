@@ -1,5 +1,9 @@
 package bbitai.service.impl;
 
+import hu.avhga.g3.lib.exception.BaseErrorCode;
+import hu.avhga.g3.lib.exception.ServiceException;
+import hu.avhga.g3.lib.security.AuthorizationHelper;
+
 import bbitai.api.model.ListPhotos200Response;
 import bbitai.api.model.PhotoListItem;
 import bbitai.api.model.Photo;
@@ -20,6 +24,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
@@ -33,6 +39,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class PhotoServiceImpl implements PhotoService {
+	private static final Logger log = LoggerFactory.getLogger(PhotoServiceImpl.class);
 
 	private final PhotoRepository photoRepository;
 	private final UserRepository userRepository;
@@ -42,22 +49,32 @@ public class PhotoServiceImpl implements PhotoService {
 	@Override
 	@Transactional(readOnly = true)
 	public ListPhotos200Response listPhotos(String sortBy, String order) {
+		String username= AuthorizationHelper.getCurrentUserName();
+		if(username==null) {
+			throw new ServiceException(BaseErrorCode.CL002,"Nincs username a tokenben.");
+		}
+		log.error("username:{}",username);
+
 		// Map sortBy parameter to actual column name
 		String sortColumn = "date".equalsIgnoreCase(sortBy) ? "uploadDate" : "name";
 		Sort.Direction direction = "asc".equalsIgnoreCase(order) ? Sort.Direction.ASC : Sort.Direction.DESC;
 		Sort sort = Sort.by(direction, sortColumn);
-
 		List<bbitai.domain.Photo> photos = photoRepository.findAll(sort);
 
-		List<PhotoListItem> items = photos.stream()
+		List<PhotoListItem> items = photos.stream().filter(photo-> photo.getUploadedBy().getUsername().equals(username))
 				.map(entity -> {
 					PhotoListItem item = new PhotoListItem();
 					item.setId(entity.getId());
 					item.setName(entity.getName());
 					item.setUploadDate(entity.getUploadDate());
+					log.info("PhotoListItem - id: {}, name: {}, uploadDate: {}, uploadedBy: [id: {}, username: {}]",
+							entity.getId(), entity.getName(), entity.getUploadDate(),
+							entity.getUploadedBy().getId(), entity.getUploadedBy().getUsername());
 					return item;
 				})
 				.collect(Collectors.toList());
+
+		log.info("Total items returned for user '{}': {}", username, items.size());
 
 		ListPhotos200Response response = new ListPhotos200Response();
 		response.setPhotos(items);
@@ -83,9 +100,19 @@ public class PhotoServiceImpl implements PhotoService {
 
 	@Override
 	@Transactional
-	public Photo uploadPhoto(String name, MultipartFile file, Long userId) throws IOException {
-		User user = userRepository.findById(userId)
-				.orElseThrow(() -> new RuntimeException("User not found"));
+	public Photo uploadPhoto(String name, MultipartFile file, String username) throws IOException {
+		List<User> users = userRepository.findByUsername(username);
+
+		User user = null;
+		if(users.size()>1) {
+			throw new RuntimeException("Cannnot create new user, username must be unique.");
+		}
+		if(users.isEmpty()) {
+			user=userRepository.saveAndFlush(User.builder().username(username).password("asd").createdAt(LocalDateTime.now()).build());
+		}else {
+			user =users.getFirst();
+		}
+
 
 		bbitai.domain.Photo photo = bbitai.domain.Photo.builder()
 				.name(name)
@@ -111,14 +138,28 @@ public class PhotoServiceImpl implements PhotoService {
 
 	@Override
 	@Transactional
-	public boolean deletePhoto(Long photoId, Long userId) {
-		return photoRepository.findById(photoId).map(existing -> {
-			if (!existing.getUploadedBy().getId().equals(userId)) {
-				throw new RuntimeException("User does not own this photo");
-			}
-			photoRepository.deleteById(photoId);
-			return true;
-		}).orElse(false);
+	public void deletePhoto(Long photoId) {
+		String username= AuthorizationHelper.getCurrentUserName();
+		if(username==null) {
+			throw new ServiceException(BaseErrorCode.CL002,"Nincs username a tokenben.");
+		}
+
+		List<User> users = userRepository.findByUsername(username);
+		User user = null;
+		if(users.size()>1) {
+			throw new RuntimeException("Username must be unique.");
+		}
+		if(users.isEmpty()) {
+			throw new ServiceException(BaseErrorCode.CL002);
+		}else {
+			user =users.getFirst();
+		}
+
+		bbitai.domain.Photo toDelete=photoRepository.findById(photoId).orElseThrow();
+		if(!toDelete.getUploadedBy().getUsername().equals(user.getUsername())){
+			throw new ServiceException(BaseErrorCode.CL003,"csak saját fotót lehet törölni.");
+		}
+		photoRepository.deleteById(toDelete.getId());
 	}
 
 	@Override
@@ -138,47 +179,49 @@ public class PhotoServiceImpl implements PhotoService {
 	@Override
 	@Transactional
 	public UserResponse registerUser(String username, String password) {
-		if (userRepository.findByUsername(username).isPresent()) {
-			throw new RuntimeException("User already exists");
-		}
-
-		User user = User.builder()
-				.username(username)
-				.password(passwordEncoder.encode(password))
-				.createdAt(LocalDateTime.now())
-				.build();
-
-		User saved = userRepository.saveAndFlush(user);
-
-		UserResponse response = new UserResponse();
-		response.setId(saved.getId());
-		response.setUsername(saved.getUsername());
-		response.setCreatedAt(saved.getCreatedAt());
-		return response;
+//		if (userRepository.findByUsername(username).isPresent()) {
+//			throw new RuntimeException("User already exists");
+//		}
+//
+//		User user = User.builder()
+//				.username(username)
+//				.password(passwordEncoder.encode(password))
+//				.createdAt(LocalDateTime.now())
+//				.build();
+//
+//		User saved = userRepository.saveAndFlush(user);
+//
+//		UserResponse response = new UserResponse();
+//		response.setId(saved.getId());
+//		response.setUsername(saved.getUsername());
+//		response.setCreatedAt(saved.getCreatedAt());
+//		return response;
+		return null;
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public LoginResponse loginUser(String username, String password) {
-		User user = userRepository.findByUsername(username)
-				.orElseThrow(() -> new RuntimeException("Invalid credentials"));
-
-		if (!passwordEncoder.matches(password, user.getPassword())) {
-			throw new RuntimeException("Invalid credentials");
-		}
-
-		// TODO: Generate JWT token (for now using placeholder)
-		LoginResponse response = new LoginResponse();
-		response.setToken("jwt_token_placeholder");
-		response.setExpiresIn(3600);
-
-		UserResponse userResponse = new UserResponse();
-		userResponse.setId(user.getId());
-		userResponse.setUsername(user.getUsername());
-		userResponse.setCreatedAt(user.getCreatedAt());
-		response.setUser(userResponse);
-
-		return response;
+//		User user = userRepository.findByUsername(username)
+//				.orElseThrow(() -> new RuntimeException("Invalid credentials"));
+//
+//		if (!passwordEncoder.matches(password, user.getPassword())) {
+//			throw new RuntimeException("Invalid credentials");
+//		}
+//
+//		// TODO: Generate JWT token (for now using placeholder)
+//		LoginResponse response = new LoginResponse();
+//		response.setToken("jwt_token_placeholder");
+//		response.setExpiresIn(3600);
+//
+//		UserResponse userResponse = new UserResponse();
+//		userResponse.setId(user.getId());
+//		userResponse.setUsername(user.getUsername());
+//		userResponse.setCreatedAt(user.getCreatedAt());
+//		response.setUser(userResponse);
+//
+//		return response;
+		return null;
 	}
 
 	@Override
