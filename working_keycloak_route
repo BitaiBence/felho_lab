@@ -1,0 +1,61 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: keycloak
+  namespace: bbitai-dev
+  uid: 50346f3e-df93-4788-88cf-da7cf903173a
+  resourceVersion: '7323327525'
+  creationTimestamp: '2026-02-21T13:49:07Z'
+  annotations:
+    openshift.io/host.generated: 'true'
+  managedFields:
+    - manager: openshift-router
+      operation: Update
+      apiVersion: route.openshift.io/v1
+      time: '2026-02-21T13:49:07Z'
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:status':
+          'f:ingress': {}
+      subresource: status
+    - manager: Mozilla
+      operation: Update
+      apiVersion: route.openshift.io/v1
+      time: '2026-02-23T12:07:52Z'
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:spec':
+          'f:port':
+            .: {}
+            'f:targetPort': {}
+          'f:tls':
+            .: {}
+            'f:insecureEdgeTerminationPolicy': {}
+            'f:termination': {}
+          'f:to':
+            'f:kind': {}
+            'f:name': {}
+            'f:weight': {}
+          'f:wildcardPolicy': {}
+spec:
+  host: keycloak-bbitai-dev.apps.rm3.7wse.p1.openshiftapps.com
+  to:
+    kind: Service
+    name: keycloak
+    weight: 100
+  port:
+    targetPort: 18080-tcp
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None
+status:
+  ingress:
+    - host: keycloak-bbitai-dev.apps.rm3.7wse.p1.openshiftapps.com
+      routerName: default
+      conditions:
+        - type: Admitted
+          status: 'True'
+          lastTransitionTime: '2026-02-21T13:49:07Z'
+      wildcardPolicy: None
+      routerCanonicalHostname: router-default.apps.rm3.7wse.p1.openshiftapps.com

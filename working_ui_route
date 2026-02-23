@@ -1,0 +1,85 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: felho-lab-ui-git7
+  namespace: bbitai-dev
+  uid: 72e68215-8c77-4cf3-8bfb-c8eee90bd474
+  resourceVersion: '7323445546'
+  creationTimestamp: '2026-02-21T17:24:51Z'
+  labels:
+    app: felho-lab-ui-git7
+    app.kubernetes.io/component: felho-lab-ui-git7
+    app.kubernetes.io/instance: felho-lab-ui-git7
+    app.kubernetes.io/name: felho-lab-ui-git7
+    app.kubernetes.io/part-of: felho-lab-git-app
+  annotations:
+    app.openshift.io/vcs-ref: ''
+    app.openshift.io/vcs-uri: 'https://github.com/BitaiBence/felho_lab_ui.git'
+    openshift.io/generated-by: OpenShiftWebConsole
+    openshift.io/host.generated: 'true'
+  managedFields:
+    - manager: openshift-router
+      operation: Update
+      apiVersion: route.openshift.io/v1
+      time: '2026-02-21T17:24:51Z'
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:status':
+          'f:ingress': {}
+      subresource: status
+    - manager: Mozilla
+      operation: Update
+      apiVersion: route.openshift.io/v1
+      time: '2026-02-23T12:35:23Z'
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:metadata':
+          'f:annotations':
+            .: {}
+            'f:app.openshift.io/vcs-ref': {}
+            'f:app.openshift.io/vcs-uri': {}
+            'f:openshift.io/generated-by': {}
+          'f:labels':
+            .: {}
+            'f:app': {}
+            'f:app.kubernetes.io/component': {}
+            'f:app.kubernetes.io/instance': {}
+            'f:app.kubernetes.io/name': {}
+            'f:app.kubernetes.io/part-of': {}
+        'f:spec':
+          'f:path': {}
+          'f:port':
+            .: {}
+            'f:targetPort': {}
+          'f:tls':
+            .: {}
+            'f:insecureEdgeTerminationPolicy': {}
+            'f:termination': {}
+          'f:to':
+            'f:kind': {}
+            'f:name': {}
+            'f:weight': {}
+          'f:wildcardPolicy': {}
+spec:
+  host: felho-lab-ui-git7-bbitai-dev.apps.rm3.7wse.p1.openshiftapps.com
+  path: /ui
+  to:
+    kind: Service
+    name: felho-lab-ui-git7
+    weight: 100
+  port:
+    targetPort: 8080-tcp
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  wildcardPolicy: None
+status:
+  ingress:
+    - host: felho-lab-ui-git7-bbitai-dev.apps.rm3.7wse.p1.openshiftapps.com
+      routerName: default
+      conditions:
+        - type: Admitted
+          status: 'True'
+          lastTransitionTime: '2026-02-21T17:24:51Z'
+      wildcardPolicy: None
+      routerCanonicalHostname: router-default.apps.rm3.7wse.p1.openshiftapps.com
