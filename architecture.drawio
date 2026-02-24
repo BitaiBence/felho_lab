@@ -1,0 +1,83 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" version="29.5.2">
+  <diagram id="arch-diagram" name="Rendszer Architektúra">
+    <mxGraphModel dx="1554" dy="815" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=20;fontStyle=1;fontColor=#1F497D;" value="Photo Service – Rendszer Architektúra" vertex="1">
+          <mxGeometry height="40" width="400" x="300" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="user" parent="1" style="shape=actor;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;fontStyle=1;" value="Felhasználó" vertex="1">
+          <mxGeometry height="80" width="60" x="80" y="250" as="geometry" />
+        </mxCell>
+        <mxCell id="user-label" parent="1" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=11;fontColor=#666666;" value="Böngésző" vertex="1">
+          <mxGeometry height="30" width="80" x="70" y="335" as="geometry" />
+        </mxCell>
+        <mxCell id="ui-container" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1f5fe;strokeColor=#0288d1;strokeWidth=2;arcSize=10;" value="" vertex="1">
+          <mxGeometry height="160" width="180" x="220" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="ui-title" parent="1" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=14;fontColor=#01579b;" value="&lt;b&gt;Angular UI&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="100" x="260" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="backend-container" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8f5e9;strokeColor=#43a047;strokeWidth=2;arcSize=10;" value="" vertex="1">
+          <mxGeometry height="200" width="200" x="500" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="backend-title" parent="1" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=14;fontColor=#2e7d32;" value="&lt;b&gt;Photo Service&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="130" x="540" y="275" as="geometry" />
+        </mxCell>
+        <mxCell id="db-container" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=10;fillColor=#fff3e0;strokeColor=#e65100;strokeWidth=2;" value="" vertex="1">
+          <mxGeometry height="130" width="160" x="810" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="db-title" parent="1" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=14;fontColor=#bf360c;" value="&lt;b&gt;SQL Server&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="110" x="840" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="kc-container" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fce4ec;strokeColor=#c62828;strokeWidth=2;arcSize=10;" value="" vertex="1">
+          <mxGeometry height="160" width="200" x="500" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="kc-title" parent="1" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=14;fontColor=#b71c1c;" value="&lt;b&gt;Keycloak&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="90" x="555" y="545" as="geometry" />
+        </mxCell>
+        <mxCell id="pg-container" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=10;fillColor=#f3e5f5;strokeColor=#7b1fa2;strokeWidth=2;" value="" vertex="1">
+          <mxGeometry height="130" width="160" x="810" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="pg-title" parent="1" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=14;fontColor=#6a1b9a;" value="&lt;b&gt;PostgreSQL&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="110" x="835" y="530" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow-user-ui" edge="1" parent="1" source="user" style="endArrow=block;endFill=1;html=1;strokeWidth=2;strokeColor=#0288d1;fontSize=10;fontColor=#0288d1;" target="ui-container" value="HTTPS">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow-ui-backend" edge="1" parent="1" source="ui-container" style="endArrow=block;endFill=1;html=1;strokeWidth=2;strokeColor=#43a047;fontSize=10;fontColor=#2e7d32;" target="backend-container" value="REST API&lt;br&gt;(JWT Bearer)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow-backend-db" edge="1" parent="1" source="backend-container" style="endArrow=block;endFill=1;html=1;strokeWidth=2;strokeColor=#e65100;fontSize=10;fontColor=#e65100;" target="db-container" value="JDBC">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="arrow-kc-pg" edge="1" parent="1" source="kc-container" style="endArrow=block;endFill=1;html=1;strokeWidth=2;strokeColor=#7b1fa2;fontSize=10;fontColor=#7b1fa2;" target="pg-container" value="JDBC">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="os-box" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#d32f2f;strokeWidth=2;dashed=1;dashPattern=12 6;arcSize=5;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;" value="" vertex="1">
+          <mxGeometry height="610" width="830" x="160" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="os-label" parent="1" style="text;html=1;align=left;verticalAlign=top;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=12;fontColor=#d32f2f;fontStyle=1;" value="OpenShift Developer Sandbox&lt;div&gt;&lt;br/&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="40" width="190" x="200" y="75" as="geometry" />
+        </mxCell>
+        <mxCell id="5IYRxEbT38UZR-Ed1cjQ-1" edge="1" parent="1" source="kc-container" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.25;exitDx=0;exitDy=0;entryX=0.713;entryY=1.01;entryDx=0;entryDy=0;entryPerimeter=0;" target="ui-container">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="500" y="560" />
+              <mxPoint x="348" y="560" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="5IYRxEbT38UZR-Ed1cjQ-2" connectable="0" parent="5IYRxEbT38UZR-Ed1cjQ-1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="callback+token" vertex="1">
+          <mxGeometry relative="1" x="-0.2456" y="-1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="5IYRxEbT38UZR-Ed1cjQ-3" edge="1" parent="1" source="ui-container" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.813;entryDx=0;entryDy=0;entryPerimeter=0;" target="kc-container" value="login/register/logout">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

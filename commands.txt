@@ -102,6 +102,9 @@ http://keycloak-bbitai-dev.apps.rm3.7wse.p1.openshiftapps.com
 worked2:
 https://felho-lab-git-bbitai-dev.apps.rm3.7wse.p1.openshiftapps.com
 https://felho-lab-ui-git7-bbitai-dev.apps.rm3.7wse.p1.openshiftapps.com/ui/
+127.0.0.1,1434
+ps
+ps
 
 realm:photo
 https://keycloak-bbitai-dev.apps.rm3.7wse.p1.openshiftapps.com/realms/photo/protocol/openid-connect/auth
@@ -113,3 +116,5 @@ ui clientnek nincs
 token id: credentials
 add token to: headers
 header prefix: Bearer
+
+oc get all --all-namespaces -o yaml > full-cluster-export.yaml

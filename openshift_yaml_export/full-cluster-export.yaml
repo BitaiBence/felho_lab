@@ -1,0 +1,326 @@
+apiVersion: v1
+items:
+- apiVersion: kubevirt.io/v1
+  kind: KubeVirt
+  metadata:
+    annotations:
+      kubevirt.io/latest-observed-api-version: v1
+      kubevirt.io/storage-observed-api-version: v1
+    creationTimestamp: "2024-12-10T17:37:36Z"
+    finalizers:
+    - foregroundDeleteKubeVirt
+    generation: 19
+    labels:
+      app: kubevirt-hyperconverged
+      app.kubernetes.io/component: compute
+      app.kubernetes.io/managed-by: hco-operator
+      app.kubernetes.io/part-of: hyperconverged-cluster
+      app.kubernetes.io/version: 4.20.3
+    name: kubevirt-kubevirt-hyperconverged
+    namespace: openshift-cnv
+    ownerReferences:
+    - apiVersion: hco.kubevirt.io/v1beta1
+      blockOwnerDeletion: true
+      controller: true
+      kind: HyperConverged
+      name: kubevirt-hyperconverged
+      uid: d5dfc060-689b-43d6-a2bb-00259ad4a230
+    resourceVersion: "7324379447"
+    uid: e5208737-d764-4155-a968-df832ab56f44
+  spec:
+    certificateRotateStrategy:
+      selfSigned:
+        ca:
+          duration: 48h0m0s
+          renewBefore: 24h0m0s
+        server:
+          duration: 24h0m0s
+          renewBefore: 12h0m0s
+    configuration:
+      architectureConfiguration:
+        amd64:
+          emulatedMachines:
+          - q35*
+          - pc-q35*
+          machineType: pc-q35-rhel9.6.0
+          ovmfPath: /usr/share/OVMF
+        arm64:
+          emulatedMachines:
+          - virt*
+          machineType: virt-rhel9.6.0
+          ovmfPath: /usr/share/AAVMF
+      developerConfiguration:
+        cpuAllocationRatio: 10
+        diskVerification:
+          memoryLimit: 2G
+        featureGates:
+        - CPUManager
+        - Snapshot
+        - ExpandDisks
+        - HostDevices
+        - VMExport
+        - KubevirtSeccompProfile
+        - VMPersistentState
+        - InstancetypeReferencePolicy
+        - WithHostModelCPU
+        - HypervStrictCheck
+        - HotplugVolumes
+        memoryOvercommit: 100
+      evictionStrategy: LiveMigrate
+      migrations:
+        allowAutoConverge: false
+        allowPostCopy: false
+        completionTimeoutPerGiB: 800
+        parallelMigrationsPerCluster: 5
+        parallelOutboundMigrationsPerNode: 2
+        progressTimeout: 150
+      network:
+        binding:
+          l2bridge:
+            domainAttachmentType: managedTap
+            migration: {}
+        defaultNetworkInterface: masquerade
+      obsoleteCPUModels:
+        "486": true
+        486-v1: true
+        Conroe: true
+        Conroe-v1: true
+        Opteron_G1: true
+        Opteron_G1-v1: true
+        Opteron_G2: true
+        Opteron_G2-v1: true
+        athlon: true
+        athlon-v1: true
+        core2duo: true
+        core2duo-v1: true
+        coreduo: true
+        coreduo-v1: true
+        kvm32: true
+        kvm32-v1: true
+        kvm64: true
+        kvm64-v1: true
+        n270: true
+        n270-v1: true
+        pentium: true
+        pentium-v1: true
+        pentium2: true
+        pentium2-v1: true
+        pentium3: true
+        pentium3-v1: true
+        pentiumpro: true
+        pentiumpro-v1: true
+        phenom: true
+        phenom-v1: true
+        qemu32: true
+        qemu32-v1: true
+        qemu64: true
+        qemu64-v1: true
+      seccompConfiguration:
+        virtualMachineInstanceProfile:
+          customProfile:
+            localhostProfile: kubevirt/kubevirt.json
+      smbios:
+        family: Red Hat
+        manufacturer: Red Hat
+        product: OpenShift Virtualization
+        sku: 4.20.3
+        version: 4.20.3
+      tlsConfiguration:
+        ciphers:
+        - TLS_AES_128_GCM_SHA256
+        - TLS_AES_256_GCM_SHA384
+        - TLS_CHACHA20_POLY1305_SHA256
+        - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+        - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        - TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
+        - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        - TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256
+        - TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256
+        minTLSVersion: VersionTLS12
+      virtualMachineOptions:
+        disableFreePageReporting: {}
+        disableSerialConsoleLog: {}
+      vmRolloutStrategy: LiveUpdate
+    customizeComponents: {}
+    infra:
+      nodePlacement:
+        tolerations:
+        - effect: NoSchedule
+          key: sandbox-cnv
+          operator: Exists
+    productComponent: compute
+    productName: hyperconverged-cluster
+    productVersion: 4.20.3
+    serviceMonitorNamespace: openshift-cnv
+    uninstallStrategy: BlockUninstallIfWorkloadsExist
+    workloadUpdateStrategy:
+      batchEvictionInterval: 1m0s
+      batchEvictionSize: 10
+      workloadUpdateMethods:
+      - LiveMigrate
+    workloads:
+      nodePlacement:
+        tolerations:
+        - effect: NoSchedule
+          key: sandbox-cnv
+          operator: Exists
+  status:
+    conditions:
+    - lastProbeTime: "2026-02-23T16:11:15Z"
+      lastTransitionTime: "2026-02-23T16:11:15Z"
+      message: All components are ready.
+      reason: AllComponentsReady
+      status: "True"
+      type: Available
+    - lastProbeTime: "2026-02-23T16:11:15Z"
+      lastTransitionTime: "2026-02-23T16:11:15Z"
+      message: All components are ready.
+      reason: AllComponentsReady
+      status: "False"
+      type: Progressing
+    - lastProbeTime: "2026-02-23T16:11:15Z"
+      lastTransitionTime: "2026-02-23T16:11:15Z"
+      message: All components are ready.
+      reason: AllComponentsReady
+      status: "False"
+      type: Degraded
+    - lastProbeTime: "2025-12-18T17:14:24Z"
+      lastTransitionTime: null
+      message: All resources were created.
+      reason: AllResourcesCreated
+      status: "True"
+      type: Created
+    defaultArchitecture: amd64
+    generations:
+    - group: apiextensions.k8s.io/v1
+      lastGeneration: 5
+      name: virtualmachineinstances.kubevirt.io
+      resource: customresourcedefinitions
+    - group: apiextensions.k8s.io/v1
+      lastGeneration: 5
+      name: virtualmachineinstancepresets.kubevirt.io
+      resource: customresourcedefinitions
+    - group: apiextensions.k8s.io/v1
+      lastGeneration: 5
+      name: virtualmachineinstancereplicasets.kubevirt.io
+      resource: customresourcedefinitions
+    - group: apiextensions.k8s.io/v1
+      lastGeneration: 5
+      name: virtualmachines.kubevirt.io
+      resource: customresourcedefinitions
+    - group: apiextensions.k8s.io/v1
+      lastGeneration: 4
+      name: virtualmachineinstancemigrations.kubevirt.io
+      resource: customresourcedefinitions
+    - group: apiextensions.k8s.io/v1
+      lastGeneration: 3
+      name: virtualmachinesnapshots.snapshot.kubevirt.io
+      resource: customresourcedefinitions
+    - group: apiextensions.k8s.io/v1
+      lastGeneration: 6
+      name: virtualmachinesnapshotcontents.snapshot.kubevirt.io
+      resource: customresourcedefinitions
+    - group: apiextensions.k8s.io/v1
+      lastGeneration: 5
+      name: virtualmachinerestores.snapshot.kubevirt.io
+      resource: customresourcedefinitions
+    - group: apiextensions.k8s.io/v1
+      lastGeneration: 3
+      name: virtualmachineinstancetypes.instancetype.kubevirt.io
+      resource: customresourcedefinitions
+    - group: apiextensions.k8s.io/v1
+      lastGeneration: 3
+      name: virtualmachineclusterinstancetypes.instancetype.kubevirt.io
+      resource: customresourcedefinitions
+    - group: apiextensions.k8s.io/v1
+      lastGeneration: 5
+      name: virtualmachinepools.pool.kubevirt.io
+      resource: customresourcedefinitions
+    - group: apiextensions.k8s.io/v1
+      lastGeneration: 3
+      name: migrationpolicies.migrations.kubevirt.io
+      resource: customresourcedefinitions
+    - group: apiextensions.k8s.io/v1
+      lastGeneration: 5
+      name: virtualmachinepreferences.instancetype.kubevirt.io
+      resource: customresourcedefinitions
+    - group: apiextensions.k8s.io/v1
+      lastGeneration: 5
+      name: virtualmachineclusterpreferences.instancetype.kubevirt.io
+      resource: customresourcedefinitions
+    - group: apiextensions.k8s.io/v1
+      lastGeneration: 3
+      name: virtualmachineexports.export.kubevirt.io
+      resource: customresourcedefinitions
+    - group: apiextensions.k8s.io/v1
+      lastGeneration: 4
+      name: virtualmachineclones.clone.kubevirt.io
+      resource: customresourcedefinitions
+    - group: admissionregistration.k8s.io
+      lastGeneration: 467
+      name: virt-operator-validator
+      resource: validatingwebhookconfigurations
+    - group: admissionregistration.k8s.io
+      lastGeneration: 469
+      name: virt-api-validator
+      resource: validatingwebhookconfigurations
+    - group: admissionregistration.k8s.io
+      lastGeneration: 468
+      name: virt-api-mutator
+      resource: mutatingwebhookconfigurations
+    - group: apps
+      lastGeneration: 18
+      name: virt-api
+      namespace: openshift-cnv
+      resource: deployments
+    - group: apps
+      lastGeneration: 1
+      name: virt-api-pdb
+      namespace: openshift-cnv
+      resource: poddisruptionbudgets
+    - group: apps
+      lastGeneration: 18
+      name: virt-controller
+      namespace: openshift-cnv
+      resource: deployments
+    - group: apps
+      lastGeneration: 1
+      name: virt-controller-pdb
+      namespace: openshift-cnv
+      resource: poddisruptionbudgets
+    - group: apps
+      lastGeneration: 18
+      name: virt-exportproxy
+      namespace: openshift-cnv
+      resource: deployments
+    - group: apps
+      lastGeneration: 1
+      name: virt-exportproxy-pdb
+      namespace: openshift-cnv
+      resource: poddisruptionbudgets
+    - group: apps
+      lastGeneration: 52
+      name: virt-handler
+      namespace: openshift-cnv
+      resource: daemonsets
+    observedDeploymentConfig: '{"id":"6c7b6f8b174aedf56927c4ee59e32bd32e12a795","namespace":"openshift-cnv","kubeVirtVersion":"sha256:1823a4c581900087411be32c46297e8224087ebad0c10adafb1e48fc9fb5af8f","virtOperatorImage":"registry.redhat.io/container-native-virtualization/virt-operator-rhel9@sha256:1823a4c581900087411be32c46297e8224087ebad0c10adafb1e48fc9fb5af8f","virtApiImage":"registry.redhat.io/container-native-virtualization/virt-api-rhel9@sha256:dc021c2d95737add38dbe43a961e8ae2ae8245df3cbcf46727b3ad89d8e27af1","virtControllerImage":"registry.redhat.io/container-native-virtualization/virt-controller-rhel9@sha256:9451fbcaaf9b486168195661f3b370a34656bbe856133644cec7364fb0f9327a","virtHandlerImage":"registry.redhat.io/container-native-virtualization/virt-handler-rhel9@sha256:fb61c086221a580b2a084611d0163635eda53d584c390f8df52a730e22925922","virtLauncherImage":"registry.redhat.io/container-native-virtualization/virt-launcher-rhel9@sha256:3138ad3a4471ca69be37fbe50a96be4b89e120de0e2808067ca99ff576f16256","virtExportProxyImage":"registry.redhat.io/container-native-virtualization/virt-exportproxy-rhel9@sha256:1fb533343f9eb45062f1817e8be3e46c315887fc24d146fce4d83b53fcdbd6c6","virtExportServerImage":"registry.redhat.io/container-native-virtualization/virt-exportserver-rhel9@sha256:89a4a5077410687afaeceb73af8c43d6330661ceb34225c72a7a18785321a6e1","virtSynchronizationControllerImage":"registry.redhat.io/container-native-virtualization/virt-synchronization-controller-rhel9@sha256:9e46d42b1c81ef70de81b43109b7d3cff9c259899da6454467e6ceef4cd069fc","GsImage":"registry.redhat.io/container-native-virtualization/libguestfs-tools-rhel9@sha256:4d5457ce137f9984f3a8227be66b51df7ca24d2cee950c7a62fe07e4da8c957a","PrHelperImage":"registry.redhat.io/container-native-virtualization/pr-helper-rhel9@sha256:9a2691eafd72990f03f4600e0fac40e1572479493723387c159f66261a85eeab","SidecarShimImage":"registry.redhat.io/container-native-virtualization/sidecar-shim-rhel9@sha256:6abf158997ac1207a2ae7d0589d830a14e5724905c98e84b32a3b41882211e04","additionalProperties":{"CertificateRotationStrategy":"\u003cv1.KubeVirtCertificateRotateStrategy
+      Value\u003e","Configuration":"\u003cv1.KubeVirtConfiguration Value\u003e","CustomizeComponents":"\u003cv1.CustomizeComponents
+      Value\u003e","ImagePullPolicy":"","ImagePullSecrets":"null","Infra":"\u003c*v1.ComponentConfig
+      Value\u003e","MonitorAccount":"","MonitorNamespace":"","ProductComponent":"compute","ProductName":"hyperconverged-cluster","ProductVersion":"4.20.3","ServiceMonitorNamespace":"openshift-cnv","SynchronizationPort":"","UninstallStrategy":"BlockUninstallIfWorkloadsExist","WorkloadUpdateStrategy":"\u003cv1.KubeVirtWorkloadUpdateStrategy
+      Value\u003e","Workloads":"\u003c*v1.ComponentConfig Value\u003e"}}'
+    observedDeploymentID: 6c7b6f8b174aedf56927c4ee59e32bd32e12a795
+    observedGeneration: 19
+    observedKubeVirtVersion: sha256:1823a4c581900087411be32c46297e8224087ebad0c10adafb1e48fc9fb5af8f
+    operatorVersion: v1.6.3-42-gf72ce58db2
+    outdatedVirtualMachineInstanceWorkloads: 0
+    phase: Deployed
+    targetDeploymentConfig: '{"id":"6c7b6f8b174aedf56927c4ee59e32bd32e12a795","namespace":"openshift-cnv","kubeVirtVersion":"sha256:1823a4c581900087411be32c46297e8224087ebad0c10adafb1e48fc9fb5af8f","virtOperatorImage":"registry.redhat.io/container-native-virtualization/virt-operator-rhel9@sha256:1823a4c581900087411be32c46297e8224087ebad0c10adafb1e48fc9fb5af8f","virtApiImage":"registry.redhat.io/container-native-virtualization/virt-api-rhel9@sha256:dc021c2d95737add38dbe43a961e8ae2ae8245df3cbcf46727b3ad89d8e27af1","virtControllerImage":"registry.redhat.io/container-native-virtualization/virt-controller-rhel9@sha256:9451fbcaaf9b486168195661f3b370a34656bbe856133644cec7364fb0f9327a","virtHandlerImage":"registry.redhat.io/container-native-virtualization/virt-handler-rhel9@sha256:fb61c086221a580b2a084611d0163635eda53d584c390f8df52a730e22925922","virtLauncherImage":"registry.redhat.io/container-native-virtualization/virt-launcher-rhel9@sha256:3138ad3a4471ca69be37fbe50a96be4b89e120de0e2808067ca99ff576f16256","virtExportProxyImage":"registry.redhat.io/container-native-virtualization/virt-exportproxy-rhel9@sha256:1fb533343f9eb45062f1817e8be3e46c315887fc24d146fce4d83b53fcdbd6c6","virtExportServerImage":"registry.redhat.io/container-native-virtualization/virt-exportserver-rhel9@sha256:89a4a5077410687afaeceb73af8c43d6330661ceb34225c72a7a18785321a6e1","virtSynchronizationControllerImage":"registry.redhat.io/container-native-virtualization/virt-synchronization-controller-rhel9@sha256:9e46d42b1c81ef70de81b43109b7d3cff9c259899da6454467e6ceef4cd069fc","GsImage":"registry.redhat.io/container-native-virtualization/libguestfs-tools-rhel9@sha256:4d5457ce137f9984f3a8227be66b51df7ca24d2cee950c7a62fe07e4da8c957a","PrHelperImage":"registry.redhat.io/container-native-virtualization/pr-helper-rhel9@sha256:9a2691eafd72990f03f4600e0fac40e1572479493723387c159f66261a85eeab","SidecarShimImage":"registry.redhat.io/container-native-virtualization/sidecar-shim-rhel9@sha256:6abf158997ac1207a2ae7d0589d830a14e5724905c98e84b32a3b41882211e04","additionalProperties":{"CertificateRotationStrategy":"\u003cv1.KubeVirtCertificateRotateStrategy
+      Value\u003e","Configuration":"\u003cv1.KubeVirtConfiguration Value\u003e","CustomizeComponents":"\u003cv1.CustomizeComponents
+      Value\u003e","ImagePullPolicy":"","ImagePullSecrets":"null","Infra":"\u003c*v1.ComponentConfig
+      Value\u003e","MonitorAccount":"","MonitorNamespace":"","ProductComponent":"compute","ProductName":"hyperconverged-cluster","ProductVersion":"4.20.3","ServiceMonitorNamespace":"openshift-cnv","SynchronizationPort":"","UninstallStrategy":"BlockUninstallIfWorkloadsExist","WorkloadUpdateStrategy":"\u003cv1.KubeVirtWorkloadUpdateStrategy
+      Value\u003e","Workloads":"\u003c*v1.ComponentConfig Value\u003e"}}'
+    targetDeploymentID: 6c7b6f8b174aedf56927c4ee59e32bd32e12a795
+    targetKubeVirtVersion: sha256:1823a4c581900087411be32c46297e8224087ebad0c10adafb1e48fc9fb5af8f
+kind: List
+metadata:
+  resourceVersion: ""
