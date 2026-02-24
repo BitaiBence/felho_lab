@@ -1,0 +1,7 @@
+Frontend github:
+https://github.com/BitaiBence/felho_lab_ui.git
+
+Backend github:
+https://github.com/BitaiBence/felho_lab.git
+
+A megoldást a main branch tartalmazza mindkét repoban. A lab1 és lab2 is készen van.
