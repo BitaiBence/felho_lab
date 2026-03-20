@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web8090
+    traefik.ingress.kubernetes.io/router.middlewares: default-ui-stripprefix@kubernetescrd
+  name: photo-ui-ingress
+spec:
+  rules:
+  - http:
+      paths:
+      - backend:
+          service:
+            name: photo-ui
+            port:
+              number: 80
+        path: /ui
+        pathType: Prefix

@@ -1,0 +1,102 @@
+apiVersion: authorization.openshift.io/v1
+kind: Role
+metadata:
+  labels:
+    app.kubernetes.io/name: devworkspace-workspaces
+    app.kubernetes.io/part-of: devworkspace-operator
+    controller.devfile.io/workspace-rbac: "true"
+  name: devworkspace-default-role
+rules:
+- apiGroups:
+  - ""
+  attributeRestrictions: null
+  resources:
+  - pods/exec
+  verbs:
+  - create
+- apiGroups:
+  - ""
+  attributeRestrictions: null
+  resources:
+  - pods
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - metrics.k8s.io
+  attributeRestrictions: null
+  resources:
+  - pods
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apps
+  - extensions
+  attributeRestrictions: null
+  resources:
+  - deployments
+  - replicasets
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  attributeRestrictions: null
+  resources:
+  - secrets
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+- apiGroups:
+  - ""
+  attributeRestrictions: null
+  resources:
+  - configmaps
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+- apiGroups:
+  - workspace.devfile.io
+  attributeRestrictions: null
+  resources:
+  - devworkspaces
+  verbs:
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - controller.devfile.io
+  attributeRestrictions: null
+  resources:
+  - devworkspaceroutings
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - workspace.devfile.io
+  attributeRestrictions: null
+  resources:
+  - devworkspacetemplates
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch

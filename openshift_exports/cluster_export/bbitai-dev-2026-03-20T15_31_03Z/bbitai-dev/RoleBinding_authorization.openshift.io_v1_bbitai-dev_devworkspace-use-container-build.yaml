@@ -1,0 +1,18 @@
+apiVersion: authorization.openshift.io/v1
+groupNames: null
+kind: RoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/name: devworkspace-workspaces
+    app.kubernetes.io/part-of: devworkspace-operator
+    controller.devfile.io/workspace-rbac: "true"
+  name: devworkspace-use-container-build
+roleRef:
+  name: devworkspace-use-container-build
+  namespace: bbitai-dev
+subjects:
+- kind: ServiceAccount
+  name: workspace411854283d724f9e-sa
+  namespace: bbitai-dev
+userNames:
+- system:serviceaccount:bbitai-dev:workspace411854283d724f9e-sa

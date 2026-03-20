@@ -1,0 +1,53 @@
+apiVersion: workspace.devfile.io/v1alpha2
+kind: DevWorkspace
+metadata:
+  annotations:
+    che.eclipse.org/che-editor: che-incubator/che-code/latest
+    che.eclipse.org/devfile: |
+      schemaVersion: 2.3.0
+    che.eclipse.org/devfile-source: |
+      scm:
+        repo: https://github.com/BitaiBence/felho_lab_ui.git
+        fileName: repo
+      factory:
+        params: url=https://github.com/BitaiBence/felho_lab_ui
+    che.eclipse.org/last-updated-timestamp: "2026-02-21T14:28:49.532Z"
+    controller.devfile.io/stopped-by: inactivity
+  finalizers:
+  - storage.controller.devfile.io
+  - rbac.controller.devfile.io
+  labels:
+    controller.devfile.io/creator: 9cf0ed3a-247b-4317-9d55-382faafded05
+  name: felho-lab-ui-nmek
+spec:
+  contributions:
+  - kubernetes:
+      name: che-code-felho-lab-ui-nmek
+    name: editor
+  - attributes:
+      che.eclipse.org/default-plugin: true
+    name: default-56fe20d2966a2a121523
+    uri: https://static.developers.redhat.com/crw/plugins/devworkspace-telemetry-amplitude-plugin/0.0.1/devfile.yaml
+  routingClass: che
+  started: false
+  template:
+    attributes:
+      controller.devfile.io/bootstrap-devworkspace: true
+      controller.devfile.io/devworkspace-config:
+        name: devworkspace-config
+        namespace: crw
+      controller.devfile.io/scc: container-build
+      controller.devfile.io/storage-type: per-user
+    components:
+    - container:
+        env:
+        - name: HOST_USERS
+          value: "true"
+        image: quay.io/devfile/universal-developer-image:ubi9-4a1e80b
+        sourceMapping: /projects
+      name: universal-developer-image
+    projects:
+    - git:
+        remotes:
+          origin: https://github.com/BitaiBence/felho_lab_ui.git
+      name: felho-lab-ui

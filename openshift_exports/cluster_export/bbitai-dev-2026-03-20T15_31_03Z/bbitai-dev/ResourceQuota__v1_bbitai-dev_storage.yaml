@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  annotations:
+    toolchain.dev.openshift.com/last-applied-configuration: '{"apiVersion":"v1","kind":"ResourceQuota","metadata":{"labels":{"toolchain.dev.openshift.com/provider":"codeready-toolchain","toolchain.dev.openshift.com/space":"bbitai"},"name":"storage","namespace":"bbitai-dev"},"spec":{"hard":{"count/persistentvolumeclaims":"10","limits.ephemeral-storage":"15Gi","requests.ephemeral-storage":"15Gi","requests.storage":"80Gi"}}}'
+  labels:
+    toolchain.dev.openshift.com/provider: codeready-toolchain
+    toolchain.dev.openshift.com/space: bbitai
+  name: storage
+spec:
+  hard:
+    count/persistentvolumeclaims: "10"
+    limits.ephemeral-storage: 15Gi
+    requests.ephemeral-storage: 15Gi
+    requests.storage: 80Gi

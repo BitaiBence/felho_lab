@@ -1,0 +1,18 @@
+apiVersion: authorization.openshift.io/v1
+kind: Role
+metadata:
+  labels:
+    app.kubernetes.io/name: devworkspace-workspaces
+    app.kubernetes.io/part-of: devworkspace-operator
+    controller.devfile.io/workspace-rbac: "true"
+  name: devworkspace-use-container-build
+rules:
+- apiGroups:
+  - security.openshift.io
+  attributeRestrictions: null
+  resourceNames:
+  - container-build
+  resources:
+  - securitycontextconstraints
+  verbs:
+  - use

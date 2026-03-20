@@ -1,0 +1,24 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  annotations:
+    toolchain.dev.openshift.com/last-applied-configuration: '{"apiVersion":"rbac.authorization.k8s.io/v1","kind":"Role","metadata":{"labels":{"toolchain.dev.openshift.com/provider":"codeready-toolchain","toolchain.dev.openshift.com/space":"bbitai"},"name":"rbac-edit","namespace":"bbitai-dev"},"rules":[{"apiGroups":["authorization.openshift.io","rbac.authorization.k8s.io"],"resources":["roles","rolebindings"],"verbs":["get","list","watch","create","update","patch","delete"]}]}'
+  labels:
+    toolchain.dev.openshift.com/provider: codeready-toolchain
+    toolchain.dev.openshift.com/space: bbitai
+  name: rbac-edit
+rules:
+- apiGroups:
+  - authorization.openshift.io
+  - rbac.authorization.k8s.io
+  resources:
+  - roles
+  - rolebindings
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete

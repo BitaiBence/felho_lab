@@ -1,0 +1,12 @@
+apiVersion: authorization.openshift.io/v1
+groupNames:
+- system:unauthenticated
+kind: RoleBinding
+metadata:
+  name: webhook-access-unauthenticated
+roleRef:
+  name: system:webhook
+subjects:
+- kind: SystemGroup
+  name: system:unauthenticated
+userNames: null

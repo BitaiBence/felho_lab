@@ -1,0 +1,17 @@
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  annotations:
+    app.openshift.io/vcs-ref: ""
+    app.openshift.io/vcs-uri: https://github.com/BitaiBence/felho_lab.git
+    openshift.io/generated-by: OpenShiftWebConsole
+  labels:
+    app: felho-lab-git
+    app.kubernetes.io/component: felho-lab-git
+    app.kubernetes.io/instance: felho-lab-git
+    app.kubernetes.io/name: felho-lab-git
+    app.kubernetes.io/part-of: felho-lab-git-app
+  name: felho-lab-git
+spec:
+  lookupPolicy:
+    local: false

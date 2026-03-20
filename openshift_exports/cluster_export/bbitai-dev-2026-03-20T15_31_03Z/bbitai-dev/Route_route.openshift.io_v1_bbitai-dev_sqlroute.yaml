@@ -1,0 +1,14 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  annotations:
+    openshift.io/host.generated: "true"
+  name: sqlroute
+spec:
+  port:
+    targetPort: tds
+  to:
+    kind: Service
+    name: sqlserver
+    weight: 100
+  wildcardPolicy: None

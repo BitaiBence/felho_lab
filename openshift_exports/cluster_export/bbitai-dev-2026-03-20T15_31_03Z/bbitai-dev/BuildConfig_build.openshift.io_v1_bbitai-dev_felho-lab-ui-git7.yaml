@@ -1,0 +1,45 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  annotations:
+    app.openshift.io/vcs-ref: ""
+    app.openshift.io/vcs-uri: https://github.com/BitaiBence/felho_lab_ui.git
+    openshift.io/generated-by: OpenShiftWebConsole
+  labels:
+    app: felho-lab-ui-git7
+    app.kubernetes.io/component: felho-lab-ui-git7
+    app.kubernetes.io/instance: felho-lab-ui-git7
+    app.kubernetes.io/name: felho-lab-ui-git7
+    app.kubernetes.io/part-of: felho-lab-git-app
+  name: felho-lab-ui-git7
+spec:
+  failedBuildsHistoryLimit: 5
+  nodeSelector: null
+  output:
+    to:
+      kind: ImageStreamTag
+      name: felho-lab-ui-git7:latest
+  postCommit: {}
+  resources: {}
+  runPolicy: Serial
+  source:
+    contextDir: /
+    git:
+      ref: main
+      uri: https://github.com/BitaiBence/felho_lab_ui.git
+    type: Git
+  strategy:
+    dockerStrategy:
+      dockerfilePath: Dockerfile
+    type: Docker
+  successfulBuildsHistoryLimit: 5
+  triggers:
+  - generic:
+      secretReference:
+        name: felho-lab-ui-git7-generic-webhook-secret
+    type: Generic
+  - github:
+      secretReference:
+        name: felho-lab-ui-git7-github-webhook-secret
+    type: GitHub
+  - type: ConfigChange

@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    app.openshift.io/vcs-ref: ""
+    app.openshift.io/vcs-uri: https://github.com/BitaiBence/felho_lab_ui.git
+    openshift.io/generated-by: OpenShiftWebConsole
+  labels:
+    app: felho-lab-ui-git7
+    app.kubernetes.io/component: felho-lab-ui-git7
+    app.kubernetes.io/instance: felho-lab-ui-git7
+    app.kubernetes.io/name: felho-lab-ui-git7
+    app.kubernetes.io/part-of: felho-lab-git-app
+  name: felho-lab-ui-git7
+spec:
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - name: 8080-tcp
+    port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: felho-lab-ui-git7
+    deployment: felho-lab-ui-git7
+  sessionAffinity: None
+  type: ClusterIP

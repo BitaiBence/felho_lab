@@ -1,0 +1,14 @@
+apiVersion: authorization.openshift.io/v1
+groupNames: null
+kind: RoleBinding
+metadata:
+  labels:
+    app.kubernetes.io/part-of: che.eclipse.org
+  name: devspaces-user-container-build
+roleRef:
+  name: devspaces-user-container-build
+subjects:
+- kind: User
+  name: bbitai
+userNames:
+- bbitai

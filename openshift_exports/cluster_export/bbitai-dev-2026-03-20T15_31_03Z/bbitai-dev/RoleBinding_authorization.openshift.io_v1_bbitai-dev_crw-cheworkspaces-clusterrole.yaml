@@ -1,0 +1,12 @@
+apiVersion: authorization.openshift.io/v1
+groupNames: null
+kind: RoleBinding
+metadata:
+  name: crw-cheworkspaces-clusterrole
+roleRef:
+  name: crw-cheworkspaces-clusterrole
+subjects:
+- kind: User
+  name: bbitai
+userNames:
+- bbitai

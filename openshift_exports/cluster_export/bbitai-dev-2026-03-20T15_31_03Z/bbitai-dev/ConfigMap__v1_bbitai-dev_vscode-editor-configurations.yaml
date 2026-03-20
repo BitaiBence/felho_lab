@@ -1,0 +1,17 @@
+apiVersion: v1
+data:
+  settings.json: |
+    {
+      "window.header": "Developer Sandbox"
+    }
+kind: ConfigMap
+metadata:
+  annotations:
+    argocd.argoproj.io/tracking-id: devspaces-member3-rosa:/ConfigMap:crw/vscode-editor-configurations
+  labels:
+    app.kubernetes.io/component: workspaces-config
+    app.kubernetes.io/managed-by: devspaces-operator
+    app.kubernetes.io/part-of: che.eclipse.org
+    controller.devfile.io/mount-to-devworkspace: "true"
+    controller.devfile.io/watch-configmap: "true"
+  name: vscode-editor-configurations

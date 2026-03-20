@@ -1,0 +1,28 @@
+apiVersion: workspace.devfile.io/v1alpha2
+kind: DevWorkspace
+metadata:
+  annotations:
+    controller.devfile.io/devworkspace-source: web-terminal
+    controller.devfile.io/restricted-access: "true"
+    controller.devfile.io/stopped-by: inactivity
+  finalizers:
+  - rbac.controller.devfile.io
+  labels:
+    console.openshift.io/terminal: "true"
+    controller.devfile.io/creator: 9cf0ed3a-247b-4317-9d55-382faafded05
+  name: terminal-66z78f
+spec:
+  routingClass: web-terminal
+  started: false
+  template:
+    components:
+    - name: web-terminal-tooling
+      plugin:
+        kubernetes:
+          name: web-terminal-tooling
+          namespace: crw
+    - name: web-terminal-exec
+      plugin:
+        kubernetes:
+          name: web-terminal-exec
+          namespace: crw

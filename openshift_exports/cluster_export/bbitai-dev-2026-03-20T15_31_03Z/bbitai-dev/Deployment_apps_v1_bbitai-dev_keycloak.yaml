@@ -1,0 +1,96 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations: {}
+  name: keycloak
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 0
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: keycloak
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/restartedAt: "2026-02-21T18:41:07+01:00"
+        openshift.openshift.io/restartedAt: "2026-02-23T12:08:27.440Z"
+      labels:
+        app: keycloak
+    spec:
+      containers:
+      - env:
+        - name: KEYCLOAK_CREATE_ADMIN_USER
+          value: "true"
+        - name: KEYCLOAK_ADMIN_USER
+          value: admin
+        - name: KEYCLOAK_ADMIN_PASSWORD
+          value: Poinp123
+        - name: KEYCLOAK_JGROUPS_DISCOVERY_PROTOCOL
+          value: JDBC_PING
+        - name: KEYCLOAK_JGROUPS_DISCOVERY_PROPERTIES
+          value: datasource_jndi_name=>java:jboss/datasources/KeycloakDS, initialize_sql=>"CREATE
+            TABLE IF NOT EXISTS JGROUPSPING ( own_addr varchar(200) NOT NULL, cluster_name
+            varchar(200) NOT NULL, created timestamp default current_timestamp, ping_data
+            BYTEA, constraint PK_JGROUPSPING PRIMARY KEY (own_addr, cluster_name))"
+        - name: KEYCLOAK_DATABASE_HOST
+          value: postgresql
+        - name: KEYCLOAK_DATABASE_USER
+          value: bn_keycloak
+        - name: KEYCLOAK_DATABASE_NAME
+          value: bitnami_keycloak
+        - name: KEYCLOAK_DATABASE_PASSWORD
+        - name: KC_PROXY
+          value: edge
+        - name: KC_HOSTNAME_STRICT
+          value: "false"
+        - name: KEYCLOAK_PROXY
+          value: edge
+        image: docker.io/bitnamilegacy/keycloak:22.0.1
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 20
+          successThreshold: 1
+          timeoutSeconds: 1
+        name: keycloak
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 15
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          limits:
+            cpu: "1"
+            memory: 1Gi
+          requests:
+            cpu: 100m
+            memory: 512Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      nodeSelector:
+        kubernetes.io/os: linux
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30

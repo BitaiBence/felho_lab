@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  annotations:
+    toolchain.dev.openshift.com/last-applied-configuration: '{"apiVersion":"v1","kind":"ResourceQuota","metadata":{"labels":{"toolchain.dev.openshift.com/provider":"codeready-toolchain","toolchain.dev.openshift.com/space":"bbitai"},"name":"compute-build","namespace":"bbitai-dev"},"spec":{"hard":{"limits.cpu":"20000m","limits.memory":"14Gi","limits.nvidia.com/gpu":0,"requests.cpu":"3000m","requests.memory":"14Gi","requests.nvidia.com/gpu":0},"scopes":["Terminating"]}}'
+  labels:
+    toolchain.dev.openshift.com/provider: codeready-toolchain
+    toolchain.dev.openshift.com/space: bbitai
+  name: compute-build
+spec:
+  hard:
+    limits.cpu: "20"
+    limits.memory: 14Gi
+    limits.nvidia.com/gpu: "0"
+    requests.cpu: "3"
+    requests.memory: 14Gi
+    requests.nvidia.com/gpu: "0"
+  scopes:
+  - Terminating

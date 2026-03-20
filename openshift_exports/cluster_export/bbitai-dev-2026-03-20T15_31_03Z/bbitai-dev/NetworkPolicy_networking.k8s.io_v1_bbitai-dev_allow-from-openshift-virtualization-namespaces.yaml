@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  annotations:
+    toolchain.dev.openshift.com/last-applied-configuration: '{"apiVersion":"networking.k8s.io/v1","kind":"NetworkPolicy","metadata":{"labels":{"toolchain.dev.openshift.com/provider":"codeready-toolchain","toolchain.dev.openshift.com/space":"bbitai"},"name":"allow-from-openshift-virtualization-namespaces","namespace":"bbitai-dev"},"spec":{"ingress":[{"from":[{"namespaceSelector":{"matchLabels":{"kubernetes.io/metadata.name":"openshift-virtualization-os-images"}}}]},{"from":[{"namespaceSelector":{"matchLabels":{"kubernetes.io/metadata.name":"openshift-cnv"}}}]}],"podSelector":{},"policyTypes":["Ingress"]}}'
+  labels:
+    toolchain.dev.openshift.com/provider: codeready-toolchain
+    toolchain.dev.openshift.com/space: bbitai
+  name: allow-from-openshift-virtualization-namespaces
+spec:
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-virtualization-os-images
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: openshift-cnv
+  podSelector: {}
+  policyTypes:
+  - Ingress

@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    alpha.image.policy.openshift.io/resolve-names: '*'
+    app.openshift.io/route-disabled: "false"
+    app.openshift.io/vcs-ref: ""
+    app.openshift.io/vcs-uri: https://github.com/BitaiBence/felho_lab.git
+    image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"felho-lab-git:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"felho-lab-git\")].image","pause":""}]'
+    openshift.io/generated-by: OpenShiftWebConsole
+  labels:
+    app: felho-lab-git
+    app.kubernetes.io/component: felho-lab-git
+    app.kubernetes.io/instance: felho-lab-git
+    app.kubernetes.io/name: felho-lab-git
+    app.kubernetes.io/part-of: felho-lab-git-app
+  name: felho-lab-git
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 0
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: felho-lab-git
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        openshift.openshift.io/restartedAt: "2026-02-22T12:34:39.451Z"
+      labels:
+        app: felho-lab-git
+        deployment: felho-lab-git
+    spec:
+      containers:
+      - image: image-registry.openshift-image-registry.svc:5000/bbitai-dev/felho-lab-git@sha256:6c5c1aee45ed0d25aa6e12689fa0c7a7d9c073a3077d01c9e14a311723f3fcff
+        imagePullPolicy: Always
+        name: felho-lab-git
+        ports:
+        - containerPort: 3000
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30

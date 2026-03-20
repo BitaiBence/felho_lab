@@ -1,0 +1,18 @@
+apiVersion: v1
+data:
+  gitconfig: |
+    [filter "lfs"]
+        clean = git-lfs clean -- %f
+        smudge = git-lfs smudge -- %f
+        process = git-lfs filter-process
+        required = true
+
+    [credential]
+        helper = "!f() { test \"$1\" = get && git credential-store --file /.git-credentials/credentials \"$@\"; }; f"
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/defaultName: git-config-secret
+    app.kubernetes.io/part-of: devworkspace-operator
+    controller.devfile.io/watch-configmap: "true"
+  name: devworkspace-gitconfig

@@ -1,0 +1,7 @@
+apiVersion: v1
+data:
+  skip-authorisation: '[]'
+  trusted-sources: '"*"'
+kind: ConfigMap
+metadata:
+  name: workspace-preferences-configmap

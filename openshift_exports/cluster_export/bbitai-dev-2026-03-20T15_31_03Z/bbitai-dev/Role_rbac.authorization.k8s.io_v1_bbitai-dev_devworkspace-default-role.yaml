@@ -1,0 +1,93 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  labels:
+    app.kubernetes.io/name: devworkspace-workspaces
+    app.kubernetes.io/part-of: devworkspace-operator
+    controller.devfile.io/workspace-rbac: "true"
+  name: devworkspace-default-role
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - pods/exec
+  verbs:
+  - create
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - metrics.k8s.io
+  resources:
+  - pods
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apps
+  - extensions
+  resources:
+  - deployments
+  - replicasets
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+  - list
+  - create
+  - patch
+  - update
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - list
+  - create
+  - patch
+  - update
+  - delete
+- apiGroups:
+  - workspace.devfile.io
+  resources:
+  - devworkspaces
+  verbs:
+  - get
+  - watch
+  - list
+  - patch
+  - update
+- apiGroups:
+  - controller.devfile.io
+  resources:
+  - devworkspaceroutings
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - workspace.devfile.io
+  resources:
+  - devworkspacetemplates
+  verbs:
+  - get
+  - create
+  - patch
+  - update
+  - delete
+  - list
+  - watch
